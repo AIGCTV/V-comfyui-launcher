@@ -1,4 +1,4 @@
-# AIGCTV ComfyUI Launcher
+# V ComfyUI Launcher
 
 [English](README.md) | [中文](README_CN.md)
 
@@ -77,6 +77,7 @@ ComfyUI_windows_portable/ (根目录)
 3.  **版本 (Versions)**: 内核更新与回退教程。
 4.  **PS插件 (PS Plugins)**: 对接 Photoshop 工作流。
 5.  **设置 (Settings)**: 模型共享与高级参数配置。
+6.  **主题 (Themes)**：切换dark和light模式。
 
 ---
 
@@ -95,4 +96,5 @@ npm run electron:build:portable
 
 ## 📄 License
 MIT License
+
 
