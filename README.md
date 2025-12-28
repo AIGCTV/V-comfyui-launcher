@@ -2,6 +2,13 @@
 
 [English](README.md) | [中文](README_CN.md)
 
+<p align="center">
+  <img src="https://img.shields.io/github/v/release/AIGCTV/V-comfyui-launcher?color=orange&label=release" />
+  <img src="https://img.shields.io/github/downloads/AIGCTV/V-comfyui-launcher/total?color=blue&label=downloads" />
+  <img src="https://img.shields.io/github/license/AIGCTV/V-comfyui-launcher" />
+  <img src="https://img.shields.io/github/stars/AIGCTV/V-comfyui-launcher?style=social" />
+</p>
+
 **A ComfyUI Launcher that Understands Creators Better** — Designed to improve efficiency, simplify deployment, and enhance workflow management.
 
 ![Dashboard Preview](docs/images/banner.png)
@@ -28,16 +35,33 @@ Say goodbye to complex command lines and take control of every update detail.
 
 ## 📥 Installation
 
-### Prerequisites: Git Environment
-This launcher relies on Git for version control and updates. If you haven't installed it or are using a streamlined system, please make sure to download and install the Git runtime library first.
+### 1. Prerequisites: Git Environment
+This launcher relies on Git for version control and updates. If you haven't installed it or are using a streamlined system, please make sure to download and install the **Git Runtime** first.
 
-🔗 **[Git Runtime Download Link](PREPARED_GIT_LINK_HERE)**  
-*(Please click the link above to download and install, then restart the launcher)*
+**Download Channels:**
+*   🚀 **[GitHub (Recommended)](https://github.com/git-for-windows/git/releases)**
+*   ☁️ **[Google Drive](https://drive.google.com/file/d/12kELPaEiuC0DkMsCf3wOiDMp4_2UywR8/view?usp=sharing)**
+*   📁 **[Quark Pan (China Speed)](https://pan.quark.cn/s/fc25d5b7ec59)**
 
-### Quick Start
-1.  Download and extract the launcher package.
-2.  Double-click `ComfyUI Launcher.exe` to run.
-3.  The system will automatically detect the environment. Once ready, click **GPU** in the bottom right start.
+### 2. Directory Structure Guide
+To ensure the launcher correctly identifies your environment, please organize your files as follows:
+
+```text
+ComfyUI_windows_portable/ (Root)
+├── git/                  <-- [Manual Create] Place extracted Git files here
+├── ComfyUI/              <-- ComfyUI source directory
+├── python_embedded/      <-- Portable Python environment
+├── launcher/             <-- [ZIP Version] Contains source/resources
+└── AIGCTV_Launcher.exe   <-- [Single File] Run directly from root
+```
+
+> [!TIP]
+> **Where to put Git?** Download the portable version of Git and extract its contents into a folder named `git` within your root directory.
+
+### 3. Quick Start
+1.  Organize your directories as shown above.
+2.  Double-click `AIGCTV_Launcher.exe` to run.
+3.  The system will automatically detect the environment. Once ready, click **GPU** in the bottom right to start.
 
 ---
 
