@@ -1,0 +1,15 @@
+# Ignore everything
+*
+
+# But not these files/folders
+!.gitignore
+!README.md
+!README_CN.md
+!LICENSE.txt
+
+# Include docs folder and all its contents
+!docs/
+!docs/**
+
+# Logs (in case they appear in docs)
+*.log
