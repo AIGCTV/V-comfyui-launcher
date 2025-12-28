@@ -69,7 +69,7 @@ ComfyUI_windows_portable/ (根目录)
 
 我们为每个功能页面提供了详细的操作手册，请参阅：
 
-👉 **[点击查看《ComfyUI Launcher 使用手册》](docs/UserGuide_CN.md)**
+👉 **[点击查看《V ComfyUI Launcher 使用手册》](docs/UserGuide_CN.md)**
 
 手册包含以下详细内容：
 1.  **启动 (Dashboard)**: 基础运行与目录管理。
@@ -95,3 +95,4 @@ npm run electron:build:portable
 
 ## 📄 License
 MIT License
+
