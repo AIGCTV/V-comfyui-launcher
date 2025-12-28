@@ -1,4 +1,4 @@
-# ComfyUI Launcher 使用手册
+# V ComfyUI Launcher 使用手册
 
 [English](UserGuide.md) | [中文](UserGuide_CN.md)
 
@@ -133,3 +133,4 @@
 *   **切换方式**: 点击页面左下角的"主题按钮"即可在黑白模式间一键切换。
 
 > ![浅色模式示范](images/light_mode.png)
+
