@@ -4,7 +4,7 @@
 
 **A ComfyUI Launcher that Understands Creators Better** — Designed to improve efficiency, simplify deployment, and enhance workflow management.
 
-![Dashboard Preview](docs/images/dashboard-preview.png)
+![Dashboard Preview](docs/images/banner.png)
 
 ## 🌟 Highlights
 
