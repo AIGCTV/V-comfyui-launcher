@@ -69,7 +69,7 @@ ComfyUI_windows_portable/ (Root)
 
 We provide specific operating manuals for each feature page, please refer to:
 
-👉 **[Click to View "ComfyUI Launcher User Manual"](docs/UserGuide.md)**
+👉 **[Click to View "V ComfyUI Launcher User Manual"](docs/UserGuide.md)**
 
 The manual covers detailed content including:
 1.  **Dashboard**: Basic operation and directory management.
