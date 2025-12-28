@@ -1,4 +1,4 @@
-# ComfyUI Launcher User Manual
+# V ComfyUI Launcher User Manual
 
 [English](UserGuide.md) | [中文](UserGuide_CN.md)
 
@@ -133,3 +133,4 @@ Supports Dark and Light mode switching to meet requirements for different creati
 *   **Switching Method**: Click the "Theme Button" in the bottom left corner to switch between dark and light modes with one click.
 
 > ![Light Mode Demo](images/light_mode.png)
+
