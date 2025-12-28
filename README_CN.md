@@ -4,7 +4,7 @@
 
 **更懂创作者的 ComfyUI 启动器** — 专为提升效率、简化部署与增强工作流管理而生。
 
-![Dashboard Preview](docs/images/dashboard-preview.png)
+![Dashboard Preview](docs/images/banner.png)
 
 ## 🌟 核心亮点 (Highlights)
 
@@ -71,3 +71,4 @@ npm run electron:build:portable
 
 ## 📄 License
 MIT License
+
