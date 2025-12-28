@@ -12,6 +12,7 @@ This manual follows the order of the sidebar in the launcher, providing a detail
 4.  [✨ PS Plugins](#4-ps-plugins)
 5.  [⚙️ Settings](#5-settings)
 6.  [📖 Tutorials](#6-tutorials)
+7.  [🌓 Themes](#7-themes)
 
 ---
 
@@ -35,7 +36,7 @@ The homepage of the launcher, used for daily basic operations.
 2.  Click the green **Play Button**.
 3.  The status changes to "Starting", then "Running", and the browser will automatically open the ComfyUI interface.
 
-> ![Dashboard Screenshot](images/dashboard_demo.png)
+> ![Dashboard Screenshot](images/dashboard.png)
 
 ---
 
@@ -47,7 +48,8 @@ A place to view background logs, used for troubleshooting and advanced operation
 *   **Open Terminal**: Click the "Open Terminal" button at the top to open an independent CMD window. This window is pre-configured with Python and Git environment variables, allowing you to directly run commands like `pip install package_name` to install missing dependencies.
 *   **Clear Logs**: Clears the current screen display.
 
-> ![Console Screenshot](images/console_demo.png)
+> ![Console Overview](images/console1.png)
+> ![Terminal Environment Demo](images/console2.png)
 
 ---
 
@@ -68,7 +70,8 @@ Manage ComfyUI kernel versions, supporting updates and rollbacks.
 4.  Find the latest version at the top of the list and click "Switch".
 5.  Wait for the "Version switch successful" prompt.
 
-> ![Versions Screenshot](images/versions_demo.png)
+> ![Stable Version List](images/versions1.png)
+> ![Dev Version List](images/versions2.png)
 
 ---
 
@@ -89,7 +92,8 @@ A feature designed for Photoshop workflow users, converting any RunningHub AI ap
 3.  Wait for the success prompt; the generated `.json` file will be saved to the default workflow directory.
 4.  Copy the file path or click "Open Folder" to view.
 
-> ![PS Plugins Screenshot](images/ps_plugins_demo.png)
+> ![Workflow Generation Interface](images/ps_plugins1.png)
+> ![Task Status Monitoring](images/ps_plugins2.png)
 
 ---
 
@@ -107,7 +111,7 @@ Global configuration and environment management.
 *   **PS Plugin Path**:
     *   Set the Photoshop plugin installation directory, supporting one-click updates for plugin files.
 
-> ![Settings Screenshot](images/settings_demo.png)
+> ![Settings Screenshot](images/settings.png)
 
 ---
 
@@ -116,4 +120,16 @@ One-click access to AIGCTV video tutorials, resource sharing, and best-of collec
 
 *   Includes FAQs, shortcut keys explanations, and relevant tutorial links.
 
-> ![Tutorials Screenshot](images/tutorials_demo.png)
+> ![Tutorials Screenshot](images/tutorials.png)
+
+---
+
+## 7. 🌓 Themes
+Supports Dark and Light mode switching to meet requirements for different creative environments.
+
+### Core Features
+*   **Dark Mode**: Default recommended mode, reduces eye strain, immersive creation.
+*   **Light Mode**: Suitable for bright environments, UI is more clean.
+*   **Switching Method**: Click the "Theme Button" in the bottom left corner to switch between dark and light modes with one click.
+
+> ![Light Mode Demo](images/light_mode.png)

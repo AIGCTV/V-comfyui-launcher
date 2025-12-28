@@ -1,0 +1,27 @@
+AIGCTV Launcher - Installation Guide
+========================
+
+[IMPORTANT]
+Please install this launcher in the ComfyUI portable package root directory!
+
+Correct installation path example:
+  ComfyUI_windows_portable\launcher\
+
+After installation, the directory structure should look like:
+  ComfyUI_windows_portable\
+    +-- ComfyUI\
+    +-- python_embeded\
+    +-- launcher\          <- Launcher installed here
+    |   +-- AIGCTV Launcher.exe
+    +-- ...
+
+[Portable Version Users]
+If you downloaded the portable version (Portable), please extract and place files in:
+  ComfyUI_windows_portable\launcher\ directory
+
+[Notes]
+1. The launcher needs to access ComfyUI related directories to work properly
+2. If installed in the wrong location, the launcher may not find ComfyUI
+3. Run as administrator on first launch (if model mapping is needed)
+
+Copyright (C) 2024 AIGCTV. All rights reserved.
