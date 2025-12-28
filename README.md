@@ -1,4 +1,4 @@
-# AIGCTV ComfyUI Launcher
+# V ComfyUI Launcher
 
 [English](README.md) | [中文](README_CN.md)
 
@@ -77,6 +77,7 @@ The manual covers detailed content including:
 3.  **Versions**: Kernel update and rollback tutorials.
 4.  **PS Plugins**: Connection to Photoshop workflow.
 5.  **Settings**: Model sharing and advanced parameter configuration.
+6.  **Themes**：Switch between dark and light display modes.
 
 ---
 
