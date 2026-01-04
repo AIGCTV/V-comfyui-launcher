@@ -5,8 +5,13 @@
 <p align="center">
   <img src="https://img.shields.io/github/v/release/AIGCTV/V-comfyui-launcher?color=orange&label=release" />
   <img src="https://img.shields.io/github/downloads/AIGCTV/V-comfyui-launcher/total?color=blue&label=downloads" />
-  <img src="https://img.shields.io/github/license/AIGCTV/V-comfyui-launcher" />
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-GPLv3-blue.svg" alt="License"></a>
   <img src="https://img.shields.io/github/stars/AIGCTV/V-comfyui-launcher?style=social" />
+</p>
+
+<p align="center">
+  <a href="https://www.youtube.com/@aigc_tv" target="_blank"><img src="https://img.shields.io/badge/YouTube-AIGCTV-red?logo=youtube&logoColor=white" alt="YouTube"></a>
+  <a href="https://space.bilibili.com/3546670109296710" target="_blank"><img src="https://img.shields.io/badge/Bilibili-AIGCTV-FF69B4?logo=bilibili&logoColor=white" alt="Bilibili"></a>
 </p>
 
 **更懂创作者的 ComfyUI 启动器** — 专为提升效率、简化部署与增强工作流管理而生。
@@ -96,5 +101,6 @@ npm run electron:build:portable
 
 ## 📄 License
 MIT License
+
 
 
