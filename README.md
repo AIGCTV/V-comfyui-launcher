@@ -10,8 +10,8 @@
 </p>
 
 <p align="center">
-  <a href="https://www.youtube.com/@AIGCTV" target="_blank"><img src="https://img.shields.io/badge/YouTube-AIGCTV-red?logo=youtube&logoColor=white" alt="YouTube"></a>
-  <a href="https://space.bilibili.com/3562145" target="_blank"><img src="https://img.shields.io/badge/Bilibili-AIGCTV-FF69B4?logo=bilibili&logoColor=white" alt="Bilibili"></a>
+  <a href="https://www.youtube.com/@aigc_tv" target="_blank"><img src="https://img.shields.io/badge/YouTube-AIGCTV-red?logo=youtube&logoColor=white" alt="YouTube"></a>
+  <a href="https://space.bilibili.com/3546670109296710" target="_blank"><img src="https://img.shields.io/badge/Bilibili-AIGCTV-FF69B4?logo=bilibili&logoColor=white" alt="Bilibili"></a>
 </p>
 
 **A ComfyUI Launcher that Understands Creators Better** — Designed to improve efficiency, simplify deployment, and enhance workflow management.
