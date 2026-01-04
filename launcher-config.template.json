@@ -1,0 +1,12 @@
+{
+    "pythonPath": "..\\python_embeded\\python.exe",
+    "usePortablePython": true,
+    "gitPath": "..\\git\\cmd\\git.exe",
+    "customArgs": "",
+    "useGitHubProxy": false,
+    "banner": "",
+    "announcement": {
+        "title": "欢迎使用 AIGCTV 启动器",
+        "time": ""
+    }
+}

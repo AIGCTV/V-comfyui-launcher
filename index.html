@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ComfyUI Launcher</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            gray: {
+              750: '#2d3748',
+              850: '#1a202c',
+              950: '#0d1117',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    /* Custom scrollbar for terminal look */
+    .scrollbar-hide::-webkit-scrollbar {
+      display: none;
+    }
+
+    .scrollbar-default::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+
+    .scrollbar-default::-webkit-scrollbar-track {
+      background: #1f2937;
+    }
+
+    .scrollbar-default::-webkit-scrollbar-thumb {
+      background: #4b5563;
+      border-radius: 4px;
+    }
+
+    .scrollbar-default::-webkit-scrollbar-thumb:hover {
+      background: #6b7280;
+    }
+
+    /* Light Theme Overrides */
+    html.light .scrollbar-default::-webkit-scrollbar-track {
+      background: #e5e7eb;
+    }
+
+    html.light .scrollbar-default::-webkit-scrollbar-thumb {
+      background: #9ca3af;
+    }
+
+    html.light .scrollbar-default::-webkit-scrollbar-thumb:hover {
+      background: #6b7280;
+    }
+
+    /* Light theme: Override backgrounds - Main areas */
+    html.light body {
+      background: #ffffff !important;
+      color: #1e293b !important;
+    }
+
+    html.light .bg-\[\#0a0e1a\],
+    html.light .bg-\[\#0d1117\],
+    html.light .bg-\[\#1e1e1e\],
+    html.light .bg-gray-900,
+    html.light .bg-gray-950 {
+      background-color: #ffffff !important;
+    }
+
+    /* Light theme: Card/Block backgrounds -> Light blue */
+    html.light .bg-gray-800,
+    html.light .bg-gray-850 {
+      background-color: #e0f2fe !important;
+    }
+
+    html.light .bg-gray-700 {
+      background-color: #bae6fd !important;
+    }
+
+    /* Light theme: Semi-transparent backgrounds */
+    html.light .bg-gray-800\/50,
+    html.light .bg-gray-800\/30,
+    html.light .bg-gray-900\/50 {
+      background-color: #e0f2fe !important;
+    }
+
+    html.light .bg-gray-700\/30,
+    html.light .bg-gray-700\/40,
+    html.light .bg-gray-700\/50 {
+      background-color: #bae6fd !important;
+    }
+
+    /* Light theme: Table rows */
+    html.light tr,
+    html.light tbody tr {
+      background-color: transparent !important;
+    }
+
+    html.light tr:hover,
+    html.light tbody tr:hover {
+      background-color: #e0f2fe !important;
+    }
+
+    /* Light theme: Green accent rows (current version) */
+    html.light .bg-green-900\/20 {
+      background-color: #dcfce7 !important;
+    }
+
+    html.light .bg-green-900\/30 {
+      background-color: #bbf7d0 !important;
+    }
+
+    /* Light theme: Override text colors */
+    html.light .text-gray-100,
+    html.light .text-gray-200,
+    html.light .text-gray-300 {
+      color: #1e293b !important;
+    }
+
+    html.light .text-gray-400,
+    html.light .text-gray-500,
+    html.light .text-gray-600 {
+      color: #475569 !important;
+    }
+
+    /* Light theme: White text needs to stay visible on colored backgrounds */
+    html.light .text-white {
+      color: #1e293b !important;
+    }
+
+    /* Light theme: Override borders */
+    html.light .border-gray-700,
+    html.light .border-gray-800,
+    html.light .border-gray-700\/50,
+    html.light .border-gray-800\/50 {
+      border-color: #cbd5e1 !important;
+    }
+
+    html.light .border-gray-600 {
+      border-color: #94a3b8 !important;
+    }
+
+    /* Light theme: Input fields */
+    html.light input,
+    html.light textarea {
+      background-color: #f1f5f9 !important;
+      color: #1e293b !important;
+      border-color: #cbd5e1 !important;
+    }
+
+    /* Light theme: Code blocks */
+    html.light code {
+      background-color: #e0f2fe !important;
+      color: #1e293b !important;
+    }
+
+    /* Light theme: Hover states */
+    html.light .hover\:bg-gray-700:hover,
+    html.light .hover\:bg-gray-800:hover,
+    html.light .hover\:bg-gray-750:hover {
+      background-color: #bae6fd !important;
+    }
+
+    html.light .hover\:bg-gray-600:hover {
+      background-color: #7dd3fc !important;
+    }
+
+    html.light .hover\:bg-gray-700\/30:hover,
+    html.light .hover\:bg-gray-700\/40:hover {
+      background-color: #bae6fd !important;
+    }
+
+    /* Light theme: Buttons that should stay dark */
+    html.light button.bg-blue-600,
+    html.light button.bg-green-500,
+    html.light button.bg-red-500,
+    html.light button.bg-purple-600 {
+      color: white !important;
+    }
+
+    /* Light theme: Gradient text override - make visible */
+    html.light .from-cyan-400,
+    html.light .to-blue-500 {
+      color: inherit !important;
+    }
+
+    /* Light theme: Shadow adjustments */
+    html.light .shadow-lg,
+    html.light .shadow-inner {
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
+    }
+
+    /* Light theme: Navigation sidebar */
+    html.light .bg-purple-600\/20 {
+      background-color: #e9d5ff !important;
+    }
+
+    /* Light theme: Dashboard gradient overlay - keep transparent */
+    html.light .from-black\/20,
+    html.light .via-transparent {
+      background: transparent !important;
+    }
+
+    /* === BUTTONS: Keep original colors in both themes === */
+    /* Blue buttons stay blue */
+    html.light .bg-blue-600 {
+      background-color: #2563eb !important;
+      color: white !important;
+    }
+
+    html.light .hover\:bg-blue-500:hover {
+      background-color: #3b82f6 !important;
+    }
+
+    /* Green buttons stay green */
+    html.light .bg-green-600 {
+      background-color: #16a34a !important;
+      color: white !important;
+    }
+
+    /* Purple buttons stay purple */
+    html.light .bg-purple-600 {
+      background-color: #9333ea !important;
+      color: white !important;
+    }
+
+    html.light .hover\:bg-purple-500:hover {
+      background-color: #a855f7 !important;
+    }
+
+    /* Red buttons stay red */
+    html.light .bg-red-600\/60 {
+      background-color: rgba(220, 38, 38, 0.6) !important;
+      color: white !important;
+    }
+
+    /* === Colored text that should stay colored === */
+    html.light .text-cyan-400 {
+      color: #06b6d4 !important;
+    }
+
+    html.light .text-green-400,
+    html.light .text-green-300 {
+      color: #22c55e !important;
+    }
+
+    html.light .text-yellow-300,
+    html.light .text-yellow-400 {
+      color: #eab308 !important;
+    }
+
+    html.light .text-red-400,
+    html.light .text-red-500 {
+      color: #ef4444 !important;
+    }
+
+    html.light .text-amber-500 {
+      color: #f59e0b !important;
+    }
+
+    html.light .text-blue-400 {
+      color: #3b82f6 !important;
+    }
+
+    html.light .text-purple-400 {
+      color: #a855f7 !important;
+    }
+  </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react": "https://esm.sh/react@^19.2.1",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.1/",
+    "react/": "https://esm.sh/react@^19.2.1/",
+    "lucide-react": "https://esm.sh/lucide-react@^0.559.0",
+    "vite": "https://esm.sh/vite@^7.2.7",
+    "@vitejs/plugin-react": "https://esm.sh/@vitejs/plugin-react@^5.1.2"
+  }
+}
+</script>
+  <link rel="stylesheet" href="/index.css">
+</head>
+
+<body class="bg-gray-900 text-gray-100 antialiased overflow-hidden">
+  <div id="root" class="h-screen w-screen flex flex-col"></div>
+  <script type="module" src="/index.tsx"></script>
+</body>
+
+</html>
