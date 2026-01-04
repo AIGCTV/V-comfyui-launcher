@@ -36,7 +36,7 @@ export const Settings: React.FC<SettingsProps> = ({ settings, onSave }) => {
                 handleChange(field, path);
             }
         } else {
-            alert("演示模式无法选择文件");
+            alert(t('settings.messages.demoSelectFile'));
         }
     };
 
@@ -47,7 +47,7 @@ export const Settings: React.FC<SettingsProps> = ({ settings, onSave }) => {
                 handleChange(field, path);
             }
         } else {
-            alert("演示模式无法选择文件夹");
+            alert(t('settings.messages.demoSelectDir'));
         }
     };
 
@@ -57,35 +57,35 @@ export const Settings: React.FC<SettingsProps> = ({ settings, onSave }) => {
 
     const handlePSPluginUpdate = async () => {
         if (!formData.psPluginPath) {
-            setUpdateStatus('⚠️ 请先设置 Photoshop 插件目录');
+            setUpdateStatus(t('settings.messages.setPsPluginDirFirst'));
             setTimeout(() => setUpdateStatus(''), 5000);
             return;
         }
 
         if (window.electronAPI?.updatePSPlugin) {
             setIsUpdatingPlugin(true);
-            setUpdateStatus('正在下载更新...');
+            setUpdateStatus(t('settings.messages.downloadingUpdate'));
             try {
                 const result = await window.electronAPI.updatePSPlugin({
                     psPluginPath: formData.psPluginPath
                 });
 
                 if (result.success) {
-                    setUpdateStatus('✓ 插件更新成功！');
+                    setUpdateStatus(t('settings.messages.pluginUpdateSuccess'));
                     setTimeout(() => setUpdateStatus(''), 3000);
                 } else {
-                    setUpdateStatus('✗ ' + (result.message || '更新失败'));
+                    setUpdateStatus('✗ ' + (result.message || t('settings.messages.updateFailed')));
                     setTimeout(() => setUpdateStatus(''), 5000);
                 }
             } catch (error) {
                 console.error('[PS Plugin] Update error:', error);
-                setUpdateStatus('✗ 更新过程中出现错误');
+                setUpdateStatus(t('settings.messages.updateError'));
                 setTimeout(() => setUpdateStatus(''), 5000);
             } finally {
                 setIsUpdatingPlugin(false);
             }
         } else {
-            setUpdateStatus('⚠️ 此功能需要在 Electron 环境中运行');
+            setUpdateStatus(t('settings.messages.electronRequired'));
             setTimeout(() => setUpdateStatus(''), 5000);
         }
     };
@@ -93,26 +93,27 @@ export const Settings: React.FC<SettingsProps> = ({ settings, onSave }) => {
 
     const handleCreateSymlink = async () => {
         if (!formData.modelsPath) {
-            alert('请先选择或输入模型目录路径');
+            alert(t('settings.messages.selectModelDirFirst'));
             return;
         }
 
         if (window.electronAPI) {
             try {
-                setSymlinkStatus('正在创建映射...');
+                setSymlinkStatus(t('settings.messages.creatingSymlink'));
                 const result = await window.electronAPI.createModelSymlink(formData.modelsPath);
 
                 if (result.success) {
-                    setSymlinkStatus('✓ ' + result.message);
+                    setSymlinkStatus('✓ ' + t(result.message));
                     setTimeout(() => setSymlinkStatus(''), 3000);
                 } else {
-                    setSymlinkStatus('✗ ' + result.message);
+                    const extraInfo = result.error ? (' ' + result.error) : '';
+                    setSymlinkStatus('✗ ' + t(result.message) + extraInfo);
                 }
             } catch (error: any) {
-                setSymlinkStatus('✗ 创建失败: ' + error.message);
+                setSymlinkStatus(t('settings.messages.createSymlinkFailed') + error.message);
             }
         } else {
-            alert("演示模式无法创建符号链接");
+            alert(t('settings.messages.demoCreateSymlink'));
         }
     };
 
@@ -131,7 +132,7 @@ export const Settings: React.FC<SettingsProps> = ({ settings, onSave }) => {
                     <div className="flex items-center gap-4 mb-5">
                         <div className="h-7 w-1.5 bg-blue-500 rounded-full shadow-[0_0_10px_rgba(59,130,246,0.5)]"></div>
                         <h1 className="text-xl font-bold text-white tracking-wide">
-                            模型共享
+                            {t('settings.modelSharing')}
                         </h1>
                         <div className="h-px bg-gray-800 flex-1 ml-4" />
                     </div>
@@ -142,8 +143,8 @@ export const Settings: React.FC<SettingsProps> = ({ settings, onSave }) => {
                                 <Link size={20} />
                             </div>
                             <div className={labelWrapperClass}>
-                                <div className="text-white font-medium text-sm">共享模型目录</div>
-                                <div className="text-gray-500 text-xs">将外部模型目录映射到 ComfyUI，多实例共享</div>
+                                <div className="text-white font-medium text-sm">{t('settings.shareModelDir')}</div>
+                                <div className="text-gray-500 text-xs">{t('settings.shareModelDesc')}</div>
                             </div>
                             <div className={inputWrapperClass}>
                                 <input
@@ -158,10 +159,10 @@ export const Settings: React.FC<SettingsProps> = ({ settings, onSave }) => {
                                     onClick={handleCreateSymlink}
                                     disabled={!formData.modelsPath}
                                     className="px-3 py-2 bg-blue-600 hover:bg-blue-500 disabled:bg-gray-700 disabled:cursor-not-allowed text-white text-sm font-medium rounded-lg flex items-center gap-1.5 transition-all whitespace-nowrap"
-                                    title="更新映射"
+                                    title={t('settings.symlink')}
                                 >
                                     <Link size={14} />
-                                    映射
+                                    {t('settings.symlink')}
                                 </button>
                                 <button
                                     type="button"
@@ -185,7 +186,7 @@ export const Settings: React.FC<SettingsProps> = ({ settings, onSave }) => {
                     <div className="flex items-center gap-4 mb-5">
                         <div className="h-7 w-1.5 bg-green-500 rounded-full shadow-[0_0_10px_rgba(34,197,94,0.5)]"></div>
                         <h1 className="text-xl font-bold text-white tracking-wide">
-                            启动参数
+                            {t('settings.launchArgs')}
                         </h1>
                         <div className="h-px bg-gray-800 flex-1 ml-4" />
                     </div>
@@ -196,8 +197,8 @@ export const Settings: React.FC<SettingsProps> = ({ settings, onSave }) => {
                                 &gt;_
                             </div>
                             <div className={labelWrapperClass}>
-                                <div className="text-white font-medium text-sm">自定义参数</div>
-                                <div className="text-gray-500 text-xs">多个参数用空格分隔，例如: --listen --port 8189</div>
+                                <div className="text-white font-medium text-sm">{t('settings.customArgs')}</div>
+                                <div className="text-gray-500 text-xs">{t('settings.customArgsDesc')}</div>
                             </div>
                             <div className={inputWrapperClass}>
                                 <input
@@ -205,7 +206,7 @@ export const Settings: React.FC<SettingsProps> = ({ settings, onSave }) => {
                                     value={formData.customArgs}
                                     onChange={(e) => handleChange('customArgs', e.target.value)}
                                     className="flex-1 bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-gray-200 focus:outline-none focus:border-purple-500 font-mono text-sm"
-                                    placeholder="--lowvram --preview-method auto"
+                                    placeholder={t('settings.customArgsDesc')}
                                 />
                             </div>
                         </div>
@@ -217,7 +218,7 @@ export const Settings: React.FC<SettingsProps> = ({ settings, onSave }) => {
                     <div className="flex items-center gap-4 mb-5">
                         <div className="h-7 w-1.5 bg-purple-500 rounded-full shadow-[0_0_10px_rgba(168,85,247,0.5)]"></div>
                         <h1 className="text-xl font-bold text-white tracking-wide">
-                            环境设置
+                            {t('settings.envSettings')}
                         </h1>
                         <div className="h-px bg-gray-800 flex-1 ml-4" />
                     </div>
@@ -229,8 +230,8 @@ export const Settings: React.FC<SettingsProps> = ({ settings, onSave }) => {
                                 PY
                             </div>
                             <div className={labelWrapperClass}>
-                                <div className="text-white font-medium text-sm">Python 路径覆盖</div>
-                                <div className="text-gray-500 text-xs">留空则使用便携包内置 Python 解释器</div>
+                                <div className="text-white font-medium text-sm">{t('settings.pythonPath')}</div>
+                                <div className="text-gray-500 text-xs">{t('settings.pythonPathDesc')}</div>
                             </div>
                             <div className={inputWrapperClass}>
                                 <input
@@ -260,8 +261,8 @@ export const Settings: React.FC<SettingsProps> = ({ settings, onSave }) => {
                                 </svg>
                             </div>
                             <div className={labelWrapperClass}>
-                                <div className="text-white font-medium text-sm">Git 路径覆盖</div>
-                                <div className="text-gray-500 text-xs">留空则使用便携包内置 Git 版本管理器</div>
+                                <div className="text-white font-medium text-sm">{t('settings.gitPathOverride')}</div>
+                                <div className="text-gray-500 text-xs">{t('settings.gitPathDesc')}</div>
                             </div>
                             <div className={inputWrapperClass}>
                                 <input
@@ -290,8 +291,8 @@ export const Settings: React.FC<SettingsProps> = ({ settings, onSave }) => {
                                 </svg>
                             </div>
                             <div className={labelWrapperClass}>
-                                <div className="text-white font-medium text-sm">使用 GitHub 代理加速</div>
-                                <div className="text-gray-500 text-xs">通过 ghproxy.com 加速版本切换和更新</div>
+                                <div className="text-white font-medium text-sm">{t('settings.useGitHubProxy')}</div>
+                                <div className="text-gray-500 text-xs">{t('settings.githubProxyDesc')}</div>
                             </div>
                             <div className="ml-auto">
                                 <label className="relative inline-flex items-center cursor-pointer">
@@ -313,7 +314,7 @@ export const Settings: React.FC<SettingsProps> = ({ settings, onSave }) => {
                     <div className="flex items-center gap-4 mb-5">
                         <div className="h-7 w-1.5 bg-cyan-500 rounded-full shadow-[0_0_10px_rgba(6,182,212,0.5)]"></div>
                         <h1 className="text-xl font-bold text-white tracking-wide">
-                            PS插件设置
+                            {t('settings.psPluginSettings')}
                         </h1>
                         <div className="h-px bg-gray-800 flex-1 ml-4" />
                     </div>
@@ -327,8 +328,8 @@ export const Settings: React.FC<SettingsProps> = ({ settings, onSave }) => {
                                 </svg>
                             </div>
                             <div className={labelWrapperClass}>
-                                <div className="text-white font-medium text-sm">Photoshop 插件目录</div>
-                                <div className="text-gray-500 text-xs">选择PS插件目录Plug-ins，后续点旋转按钮可一键更新</div>
+                                <div className="text-white font-medium text-sm">{t('settings.psPluginDir')}</div>
+                                <div className="text-gray-500 text-xs">{t('settings.psPluginDesc')}</div>
                             </div>
                             <div className={inputWrapperClass}>
                                 <input
@@ -344,7 +345,7 @@ export const Settings: React.FC<SettingsProps> = ({ settings, onSave }) => {
                                     onClick={handlePSPluginUpdate}
                                     disabled={isUpdatingPlugin}
                                     className="px-2.5 bg-blue-600 rounded-lg text-white border border-blue-500 hover:bg-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
-                                    title="自动更新插件"
+                                    title={t('settings.updatePlugin')}
                                 >
                                     {isUpdatingPlugin ? <Loader2 size={16} className="animate-spin" /> : <RefreshCw size={16} />}
                                 </button>

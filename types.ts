@@ -63,7 +63,7 @@ declare global {
       openUrl: (url: string) => Promise<void>;
       selectDirectory: () => Promise<string | null>;
       selectFile: (filters?: { name: string; extensions: string[] }[]) => Promise<string | null>;
-      createModelSymlink: (sourcePath: string) => Promise<{ success: boolean; message: string }>;
+      createModelSymlink: (sourcePath: string) => Promise<{ success: boolean; message: string; error?: string }>;
       loadSettings: () => Promise<AppSettings | null>;
       saveSettings: (settings: AppSettings) => Promise<boolean>;
       getLauncherVersion: () => Promise<{ version: string; buildDate: string }>;

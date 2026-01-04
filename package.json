@@ -1,7 +1,7 @@
 {
   "name": "comfyui-portable-launcher",
   "productName": "ComfyUI Launcher",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "main": "electron/main.cjs",
   "type": "module",
   "scripts": {
@@ -73,7 +73,7 @@
         }
       ],
       "icon": "public/icon.ico",
-      "artifactName": "${productName}_Setup_${version}.${ext}",
+      "artifactName": "V_comfyui_launcher_Setup_${version}.${ext}",
       "requestedExecutionLevel": "asInvoker",
       "signAndEditExecutable": false
     },
@@ -90,7 +90,7 @@
       "license": "LICENSE.txt"
     },
     "portable": {
-      "artifactName": "${productName}_Portable_${version}.${ext}"
+      "artifactName": "V_comfyui_launcher_${version}.${ext}"
     }
   }
 }

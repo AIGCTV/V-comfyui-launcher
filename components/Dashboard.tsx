@@ -2,6 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { Play, Square, Cpu, Zap, Folder, FolderInput, FolderOutput, FileJson } from 'lucide-react';
 import { AppStatus, RunMode } from '../types';
 import { useTranslation } from '../i18n';
+import {
+    loadConfig,
+    getCachedConfig,
+    LauncherConfig,
+    DEFAULT_CONFIG,
+} from '../services/remoteConfig';
 
 interface DashboardProps {
     status: AppStatus;
@@ -12,34 +18,6 @@ interface DashboardProps {
     onStart: () => void;
     onStop: () => void;
 }
-
-// CDN 配置 URL（使用 jsDelivr 加速 GitHub Raw，确保国内访问稳定性）
-const CONFIG_URL = 'https://cdn.jsdelivr.net/gh/AIGCTV/V-comfyui-launcher@main/launcher-config.json';
-
-// 默认配置（本地兜底，确保离线可用）
-const DEFAULT_CONFIG = {
-    // 使用 public 目录下的本地图片作为默认兜底
-    banner: 'banner.png',
-    announcement: {
-        title: '欢迎使用 AIGCTV 启动器',
-        time: '2025-12-17'
-    }
-};
-
-// 辅助函数：将 GitHub Raw 链接转换为 jsDelivr CDN 链接
-const convertToCdnUrl = (url: string) => {
-    if (!url) return url;
-    // 如果是 GitHub Raw 链接
-    if (url.includes('raw.githubusercontent.com')) {
-        // 替换规则：
-        // https://raw.githubusercontent.com/user/repo/branch/file
-        // -> https://cdn.jsdelivr.net/gh/user/repo@branch/file
-        return url.replace('raw.githubusercontent.com', 'cdn.jsdelivr.net/gh')
-            .replace('/main/', '@main/')
-            .replace('/master/', '@master/');
-    }
-    return url;
-};
 
 // 目录快捷方式配置（label 为翻译 key）
 const DIRECTORY_SHORTCUTS = [
@@ -61,69 +39,17 @@ export const Dashboard: React.FC<DashboardProps> = ({
     // i18n
     const { t } = useTranslation();
 
-    // Remote config state
-    const [config, setConfig] = useState(DEFAULT_CONFIG);
+    // Remote config state - 使用共享配置服务
+    const [config, setConfig] = useState<LauncherConfig>(() => getCachedConfig() || DEFAULT_CONFIG);
 
-    // Load remote config on mount
+    // Load remote config on mount - 使用共享配置服务
     useEffect(() => {
-        const loadRemoteConfig = async () => {
-            // 1. 先立即使用缓存配置（如果有），确保快速显示
-            const cached = localStorage.getItem('launcher_config');
-            if (cached) {
-                try {
-                    const cachedConfig = JSON.parse(cached);
-                    // 确保缓存的配置也经过 CDN 转换（如果是旧缓存）
-                    cachedConfig.banner = convertToCdnUrl(cachedConfig.banner);
-                    setConfig(cachedConfig);
-                    console.log('[Dashboard] Loaded cached config instantly');
-                } catch (e) {
-                    console.warn('[Dashboard] Failed to parse cached config');
-                }
-            }
-
-            // 2. 后台静默拉取最新配置（不阻塞 UI）
-            try {
-                console.log('[Dashboard] Fetching remote config from:', CONFIG_URL);
-
-                // 添加超时控制
-                const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 8000); // CDN 通常很快，但给 8 秒宽限
-
-                const response = await fetch(CONFIG_URL, {
-                    cache: 'no-cache',
-                    headers: { 'Accept': 'application/json' },
-                    signal: controller.signal
-                });
-
-                clearTimeout(timeoutId);
-
-                if (response.ok) {
-                    const remoteConfig = await response.json();
-
-                    // 自动优化：如果远程配置用了 GitHub Raw 图片，转为 CDN 链接
-                    if (remoteConfig.banner) {
-                        remoteConfig.banner = convertToCdnUrl(remoteConfig.banner);
-                    }
-
-                    console.log('[Dashboard] Remote config updated successfully');
-                    setConfig(remoteConfig);
-                    localStorage.setItem('launcher_config', JSON.stringify(remoteConfig));
-                    localStorage.setItem('launcher_config_time', Date.now().toString());
-                } else {
-                    console.log('[Dashboard] Remote fetch failed (status: ' + response.status + '), using cached/default config');
-                }
-            } catch (error) {
-                // 网络错误或超时，静默处理
-                if (error instanceof Error && error.name === 'AbortError') {
-                    console.log('[Dashboard] Remote config fetch timed out');
-                } else {
-                    console.log('[Dashboard] Network error, using cached/default config:', error);
-                }
-            }
-        };
-
-        loadRemoteConfig();
+        loadConfig((updatedConfig) => {
+            // 远程配置更新回调
+            setConfig(updatedConfig);
+        });
     }, []);
+
 
     // Load saved mode from localStorage
     useEffect(() => {

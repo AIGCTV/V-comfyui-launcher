@@ -49,15 +49,15 @@ ie4uinit.exe -show
 
 ### 7. 打包 Unpacked 为 zip
 ```powershell
-Compress-Archive -Path "dist-electron\win-unpacked\*" -DestinationPath "dist-electron\AIGCTV启动器_Unpacked_VERSION.zip" -Force
+Compress-Archive -Path "dist-electron\win-unpacked\*" -DestinationPath "dist-electron\V_comfyui_launcher_portable_VERSION.zip" -Force
 ```
 （将 VERSION 替换为实际版本号）
 
 ## 输出文件
 
 打包完成后，在 `dist-electron` 目录下会有：
-- `V_comfyui_lanucher_x.x.x.exe` - 单文件便携版
-- `V_comfyui_lanucher_Portable_x.x.x.zip` - 解压版（包含所有运行时文件）
+- `V_comfyui_launcher_x.x.x.exe` - 单文件便携版
+- `V_comfyui_launcher_portable_x.x.x.zip` - 解压版（包含所有运行时文件）
 
 ## 注意事项
 

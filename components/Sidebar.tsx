@@ -62,7 +62,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentTab, setTab, launcherVe
           <button
             onClick={toggleLanguage}
             className="flex items-center gap-1 px-2 py-1 text-xs text-gray-400 hover:text-white hover:bg-gray-700 rounded transition-colors"
-            title={language === 'zh' ? 'Switch to English' : '切换到中文'}
+            title={language === 'zh' ? t('sidebar.switchToEnglish') : t('sidebar.switchToChinese')}
           >
             <Globe size={14} />
             <span className="hidden lg:inline">{language === 'zh' ? 'EN' : '中文'}</span>

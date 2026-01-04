@@ -101,7 +101,9 @@ export const RunningHub: React.FC = () => {
 
         // Check if saved task status needs to be reset
         // If status is success or error, schedule reset to idle
+        // If status is running but no taskId, also reset (stale state)
         const savedStatus = localStorage.getItem('rh_task_status');
+        const savedTaskId = localStorage.getItem('rh_task_id');
         if (savedStatus) {
             try {
                 const parsed = JSON.parse(savedStatus);
@@ -111,6 +113,11 @@ export const RunningHub: React.FC = () => {
                     localStorage.removeItem('rh_task_status');
                     localStorage.removeItem('rh_task_id');
                     setTaskId('');
+                } else if (parsed.status === 'running' && !savedTaskId) {
+                    // Running but no task ID - stale state, reset to idle
+                    console.log('[RunningHub] Found stale running state without taskId, resetting');
+                    setTaskStatus({ status: 'idle', message: '' });
+                    localStorage.removeItem('rh_task_status');
                 }
             } catch (e) {
                 // Invalid JSON, clear it
@@ -163,7 +170,7 @@ export const RunningHub: React.FC = () => {
                 resetTimerRef.current = null;
             }
             handleTaskIdChange(detectedTaskId);
-            setTaskStatus({ status: 'running', message: '运行中...' });
+            setTaskStatus({ status: 'running', message: t('runninghub.runningEllipsis') });
             const now = Date.now();
             setStartTime(now);
             startTimeRef.current = now;
@@ -258,7 +265,7 @@ export const RunningHub: React.FC = () => {
                         } catch (err) {
                             console.error('[RunningHub] Failed to get outputs:', err);
                         }
-                        setTaskStatus({ status: 'success', message: `任务完成! 用时: ${displayTime}秒`, code: 0 });
+                        setTaskStatus({ status: 'success', message: t('runninghub.taskCompleted', { time: displayTime }), code: 0 });
                         stopPolling();
                         scheduleReset(); // Auto reset to idle after 10 seconds
                         fetchAccountInfo();
@@ -269,21 +276,21 @@ export const RunningHub: React.FC = () => {
 
                     // 2. QUEUED - STRICT: Only code 813 means queued
                     if (code === 813) {
-                        setTaskStatus({ status: 'running', message: `排队中...`, code: 813 });
+                        setTaskStatus({ status: 'running', message: t('runninghub.queued'), code: 813 });
                         return;
                     }
 
                     // 3. RUNNING
                     // Include code 0 if data is "RUNNING"
                     if (statusFromData === 'RUNNING' || code === 804 || (msg && msg.toUpperCase().includes('RUNNING'))) {
-                        setTaskStatus({ status: 'running', message: `运行中...`, code: code || 804 });
+                        setTaskStatus({ status: 'running', message: t('runninghub.taskRunning'), code: code || 804 });
                         return;
                     }
 
                     // 4. ERROR
                     if (statusFromData === 'FAILED' || code === 805 || (code !== undefined && code !== 0 && code !== 804 && code !== 813)) {
                         const errorMsg = msg || '未知错误';
-                        setTaskStatus({ status: 'error', message: `任务失败: ${errorMsg} (Code: ${code})`, code });
+                        setTaskStatus({ status: 'error', message: t('runninghub.taskFailed', { msg: errorMsg, code: code ?? 'Unknown' }), code });
                         stopPolling();
                         scheduleReset(); // Auto reset to idle after 10 seconds
                         setStartTime(null);
@@ -292,7 +299,7 @@ export const RunningHub: React.FC = () => {
                     }
 
                     // 5. Fallback - treat ambiguous code 0 as running to be safe
-                    setTaskStatus({ status: 'running', message: `运行中...`, code: code || 0 });
+                    setTaskStatus({ status: 'running', message: t('runninghub.taskRunning'), code: code || 0 });
                 }
             } catch (error: any) {
                 console.error('[RunningHub] Polling error:', error);
@@ -319,16 +326,16 @@ export const RunningHub: React.FC = () => {
     const handleGenerate = async () => {
         // Validation
         if (!apiKey.trim()) {
-            setStatus({ type: 'error', message: 'API Key 不能为空!' });
+            setStatus({ type: 'error', message: t('runninghub.apiKeyEmpty') });
             return;
         }
         if (!webappId.trim()) {
-            setStatus({ type: 'error', message: 'Workflow ID 不能为空!' });
+            setStatus({ type: 'error', message: t('runninghub.workflowIdEmpty') });
             return;
         }
 
         setIsLoading(true);
-        setStatus({ type: 'info', message: '正在生成工作流...' });
+        setStatus({ type: 'info', message: t('runninghub.generationStarted') });
         setSavedPath(null);
 
         try {
@@ -353,10 +360,10 @@ export const RunningHub: React.FC = () => {
                     setStatus({ type: 'error', message: result.message });
                 }
             } else {
-                setStatus({ type: 'error', message: '此功能需要在 Electron 环境中运行' });
+                setStatus({ type: 'error', message: t('runninghub.electronRequired') });
             }
         } catch (error: any) {
-            setStatus({ type: 'error', message: `生成失败: ${error.message}` });
+            setStatus({ type: 'error', message: t('runninghub.generateFailed', { error: error.message }) });
         } finally {
             setIsLoading(false);
         }
@@ -381,7 +388,7 @@ export const RunningHub: React.FC = () => {
     // Fetch account info (coins, wallet)
     const fetchAccountInfo = async () => {
         if (!apiKey.trim()) {
-            setStatus({ type: 'error', message: '请先输入 API Key' });
+            setStatus({ type: 'error', message: t('runninghub.enterApiKeyFirst') });
             return;
         }
         setAccountLoading(true);
@@ -396,7 +403,7 @@ export const RunningHub: React.FC = () => {
                 setAccountInfo(info);
                 localStorage.setItem('rh_account_info', JSON.stringify(info));
             } else {
-                setStatus({ type: 'error', message: result?.message || '获取账户信息失败' });
+                setStatus({ type: 'error', message: result?.message || t('runninghub.fetchAccountFailed') });
             }
         } catch (error: any) {
             setStatus({ type: 'error', message: error.message });
@@ -414,7 +421,7 @@ export const RunningHub: React.FC = () => {
     // Query task status
     const queryTaskStatus = async () => {
         if (!apiKey.trim() || !taskId.trim()) {
-            setStatus({ type: 'error', message: '请输入 API Key 和 Task ID' });
+            setStatus({ type: 'error', message: t('runninghub.enterApiAndTaskId') });
             return;
         }
         setTaskLoading(true);
@@ -427,14 +434,14 @@ export const RunningHub: React.FC = () => {
                 const isRunning = (code !== undefined && code >= 800 && code < 900) ||
                     msg.toUpperCase().includes('RUNNING');
                 if (isRunning) {
-                    setTaskStatus({ status: 'running', message: '任务运行中...', code: code || 800 });
+                    setTaskStatus({ status: 'running', message: t('runninghub.taskRun'), code: code || 800 });
                 } else if (code === 0) {
-                    setTaskStatus({ status: 'success', message: msg || '任务完成', code });
+                    setTaskStatus({ status: 'success', message: msg || t('runninghub.taskSuccess'), code });
                 } else {
-                    setTaskStatus({ status: 'error', message: msg || '任务失败', code });
+                    setTaskStatus({ status: 'error', message: msg || t('runninghub.taskFail'), code });
                 }
             } else {
-                setTaskStatus({ status: 'error', message: result?.message || '查询失败' });
+                setTaskStatus({ status: 'error', message: result?.message || t('runninghub.queryFailed') });
             }
         } catch (error: any) {
             setTaskStatus({ status: 'error', message: error.message });
@@ -445,24 +452,63 @@ export const RunningHub: React.FC = () => {
 
     // Cancel task
     const cancelTask = async () => {
-        if (!apiKey.trim() || !taskId.trim()) {
-            setStatus({ type: 'error', message: '请输入 API Key 和 Task ID' });
+        // If no taskId, just reset state (force reset)
+        if (!taskId.trim()) {
+            console.log('[RunningHub] Force resetting task state (no taskId)');
+            setTaskStatus({ status: 'idle', message: '' });
+            localStorage.removeItem('rh_task_status');
+            localStorage.removeItem('rh_task_id');
+            localStorage.removeItem('rh_start_time');
+            setStartTime(null);
+            startTimeRef.current = null;
+            stopPolling();
             return;
         }
+
+        if (!apiKey.trim()) {
+            setStatus({ type: 'error', message: t('runninghub.enterApiAndTaskId') });
+            return;
+        }
+
         setTaskLoading(true);
         try {
             stopPolling(); // Stop polling immediately
             const result = await window.electronAPI?.cancelRHTask(apiKey.trim(), taskId.trim());
             if (result?.success) {
-                setTaskStatus({ status: 'error', message: '已取消', code: -1 });
-                setStatus({ type: 'success', message: '任务已取消' });
+                setTaskStatus({ status: 'error', message: t('runninghub.cancelled'), code: -1 });
+                setStatus({ type: 'success', message: t('runninghub.taskCancelled') });
+                // Clear task ID and start time
+                setTaskId('');
+                localStorage.removeItem('rh_task_id');
+                localStorage.removeItem('rh_start_time');
+                setStartTime(null);
+                startTimeRef.current = null;
                 // Refresh account balance after cancel
                 fetchAccountInfo();
             } else {
-                setStatus({ type: 'error', message: result?.message || '取消失败' });
+                // If API call failed, still allow force reset
+                console.warn('[RunningHub] Cancel API failed, allowing force reset');
+                setStatus({ type: 'error', message: result?.message || t('runninghub.cancelFailed') });
+                // Force reset local state after a delay
+                setTimeout(() => {
+                    setTaskStatus({ status: 'idle', message: '' });
+                    setTaskId('');
+                    localStorage.removeItem('rh_task_status');
+                    localStorage.removeItem('rh_task_id');
+                    localStorage.removeItem('rh_start_time');
+                    setStartTime(null);
+                    startTimeRef.current = null;
+                }, 2000);
             }
         } catch (error: any) {
             setStatus({ type: 'error', message: error.message });
+            // Force reset on error as well
+            setTimeout(() => {
+                setTaskStatus({ status: 'idle', message: '' });
+                setTaskId('');
+                localStorage.removeItem('rh_task_status');
+                localStorage.removeItem('rh_task_id');
+            }, 2000);
         } finally {
             setTaskLoading(false);
         }
@@ -478,10 +524,10 @@ export const RunningHub: React.FC = () => {
                     <div>
                         <h1 className="text-2xl font-bold text-white tracking-wide flex items-center gap-3">
                             <Zap className="text-cyan-400" size={28} />
-                            RunningHub-PS 插件一键生成器
+                            {t('runninghub.title')}
                         </h1>
                         <p className="text-gray-400 text-sm mt-1">
-                            通过Runninghub应用ID自动生成PS AI插件
+                            {t('runninghub.subtitle')}
                         </p>
                     </div>
                 </div>
@@ -494,15 +540,15 @@ export const RunningHub: React.FC = () => {
                             {/* Account Info */}
                             <div className="flex items-center gap-2">
                                 <CreditCard size={16} className="text-gray-400" />
-                                <span className="text-sm text-gray-300 font-semibold">账户信息</span>
+                                <span className="text-sm text-gray-300 font-semibold">{t('runninghub.accountInfo')}</span>
                                 {apiKey.trim() && accountInfo && (
                                     <>
-                                        <span className="text-sm text-gray-400">RH币: <span className="text-yellow-400 font-bold">{accountInfo.remainCoins}</span></span>
-                                        <span className="text-sm text-gray-400">余额: <span className="text-green-400 font-bold">{accountInfo.currency === 'CNY' ? '¥' : '$'}{accountInfo.remainMoney}</span></span>
+                                        <span className="text-sm text-gray-400">{t('runninghub.rhCoins')}: <span className="text-yellow-400 font-bold">{accountInfo.remainCoins}</span></span>
+                                        <span className="text-sm text-gray-400">{t('runninghub.balance')}: <span className="text-green-400 font-bold">{accountInfo.currency === 'CNY' ? '¥' : '$'}{accountInfo.remainMoney}</span></span>
                                     </>
                                 )}
                                 {!apiKey.trim() && (
-                                    <span className="text-xs text-gray-500">请先输入API Key</span>
+                                    <span className="text-xs text-gray-500">{t('runninghub.enterApiKeyFirst')}</span>
                                 )}
                             </div>
 
@@ -511,7 +557,7 @@ export const RunningHub: React.FC = () => {
 
                             {/* Task Status */}
                             <div className="flex items-center gap-2">
-                                <span className="text-sm text-gray-300 font-semibold">任务状态</span>
+                                <span className="text-sm text-gray-300 font-semibold">{t('runninghub.taskStatus')}</span>
                                 {taskStatus.status !== 'idle' && (
                                     <>
                                         <span className={`w - 2.5 h - 2.5 rounded - full ${taskStatus.status === 'running' ? 'bg-yellow-400 animate-pulse' :
@@ -523,7 +569,7 @@ export const RunningHub: React.FC = () => {
                                     </>
                                 )}
                                 {taskStatus.status === 'idle' && (
-                                    <span className="text-xs text-gray-500">等待任务...</span>
+                                    <span className="text-xs text-gray-500">{t('runninghub.waitingForTask')}</span>
                                 )}
                             </div>
                         </div>
@@ -531,15 +577,15 @@ export const RunningHub: React.FC = () => {
                         {/* Right: Buttons */}
                         <div className="flex items-center gap-2">
                             {/* Monitoring is now automatic - no manual toggle needed */}
-                            {/* Cancel Task Button - Always visible when taskId exists */}
-                            {taskId && (
+                            {/* Cancel Task Button - Show when taskId exists OR status is running */}
+                            {(taskId || taskStatus.status === 'running') && (
                                 <button
                                     onClick={cancelTask}
                                     disabled={taskLoading}
                                     className="px-2 py-1 bg-red-600/60 hover:bg-red-500 disabled:opacity-50 rounded text-xs font-medium flex items-center gap-1"
                                 >
                                     <X size={12} />
-                                    取消任务
+                                    {taskId ? t('runninghub.cancelTask') : t('runninghub.forceReset')}
                                 </button>
                             )}
                             {/* Refresh Account Button */}
@@ -549,7 +595,7 @@ export const RunningHub: React.FC = () => {
                                 className="text-xs text-gray-400 hover:text-gray-300 flex items-center gap-1 disabled:opacity-50"
                             >
                                 {accountLoading ? <Loader2 size={12} className="animate-spin" /> : <RefreshCw size={12} />}
-                                刷新
+                                {t('runninghub.refresh')}
                             </button>
                         </div>
                     </div>
@@ -559,12 +605,12 @@ export const RunningHub: React.FC = () => {
                 <div className="bg-gray-800/50 border border-gray-700 rounded-xl p-6 space-y-5">
                     <h3 className="text-lg font-semibold text-gray-200 flex items-center gap-2">
                         <span className="w-1 h-5 bg-purple-500 rounded-full"></span>
-                        配置信息
+                        {t('runninghub.configInfo')}
                     </h3>
 
                     {/* API Key */}
                     <div className="space-y-2">
-                        <label className="block text-sm font-medium text-gray-400">API Key</label>
+                        <label className="block text-sm font-medium text-gray-400">{t('runninghub.apiKey')}</label>
                         <div className="flex gap-2">
                             <div className="relative flex-1">
                                 <input
@@ -572,7 +618,7 @@ export const RunningHub: React.FC = () => {
                                     value={apiKey}
                                     onChange={(e) => setApiKey(e.target.value)}
                                     className="w-full bg-gray-900 border border-gray-600 rounded-lg px-4 py-2.5 pr-12 text-gray-200 focus:outline-none focus:border-cyan-500 font-mono text-sm"
-                                    placeholder="输入您的 RunningHub API Key"
+                                    placeholder={t('runninghub.enterApiKeyPlaceholder')}
                                 />
                                 <button
                                     type="button"
@@ -583,7 +629,7 @@ export const RunningHub: React.FC = () => {
                                 </button>
                             </div>
                         </div>
-                        <p className="text-xs text-gray-500">在 RunningHub 个人中心获取您的 API Key</p>
+                        <p className="text-xs text-gray-500">{t('runninghub.getKeyTip')}</p>
                     </div>
 
                     {/* Webapp ID */}
@@ -594,9 +640,9 @@ export const RunningHub: React.FC = () => {
                             value={webappId}
                             onChange={(e) => setWebappId(e.target.value)}
                             className="w-full bg-gray-900 border border-gray-600 rounded-lg px-4 py-2.5 text-gray-200 focus:outline-none focus:border-cyan-500 font-mono text-sm"
-                            placeholder="例如: 1982647023562309634"
+                            placeholder={t('runninghub.idPlaceholder')}
                         />
-                        <p className="text-xs text-gray-500">工作流的唯一标识符,可在 RunningHub 工作流详情页获取</p>
+                        <p className="text-xs text-gray-500">{t('runninghub.idTip')}</p>
                     </div>
 
                     {/* Generate Button */}
@@ -609,12 +655,12 @@ export const RunningHub: React.FC = () => {
                             {isLoading ? (
                                 <>
                                     <Loader2 className="animate-spin" size={20} />
-                                    生成中...
+                                    {t('runninghub.generating')}
                                 </>
                             ) : (
                                 <>
                                     <Zap size={20} />
-                                    生成工作流
+                                    {t('runninghub.generate')}
                                 </>
                             )}
                         </button>
@@ -635,16 +681,16 @@ export const RunningHub: React.FC = () => {
                             <Loader2 className="text-blue-400 shrink-0 mt-0.5 animate-spin" size={20} />
                         )}
                         <div className="flex-1">
-                            <p className={`font - medium ${status.type === 'success' ? 'text-green-400' :
+                            <p className={`font-medium ${status.type === 'success' ? 'text-green-400' :
                                 status.type === 'error' ? 'text-red-400' :
                                     'text-blue-400'
-                                } `}>
-                                {status.type === 'success' ? '成功' : status.type === 'error' ? '错误' : '处理中'}
+                                }`}>
+                                {status.type === 'success' ? t('runninghub.statusSuccess') : status.type === 'error' ? t('runninghub.statusError') : t('runninghub.statusProcessing')}
                             </p>
-                            <p className={`text - sm mt - 1 ${status.type === 'success' ? 'text-green-200/80' :
+                            <p className={`text-sm mt-1 ${status.type === 'success' ? 'text-green-200/80' :
                                 status.type === 'error' ? 'text-red-200/80' :
                                     'text-blue-200/80'
-                                } `}>
+                                }`}>
                                 {status.message}
                             </p>
 
@@ -660,14 +706,14 @@ export const RunningHub: React.FC = () => {
                                             className="px-3 py-1 bg-gray-700 hover:bg-gray-600 rounded-lg text-xs text-gray-300 flex items-center gap-1"
                                         >
                                             <FolderOpen size={14} />
-                                            打开文件夹
+                                            {t('runninghub.openFolder')}
                                         </button>
                                         <button
                                             onClick={handleCopyPath}
                                             className="px-3 py-1 bg-gray-700 hover:bg-gray-600 rounded-lg text-xs text-gray-300 flex items-center gap-1"
                                         >
                                             {copied ? <Check size={14} /> : <Copy size={14} />}
-                                            {copied ? '已复制' : '复制路径'}
+                                            {copied ? t('runninghub.copied') : t('runninghub.copyPath')}
                                         </button>
                                     </div>
                                 </div>
@@ -679,19 +725,19 @@ export const RunningHub: React.FC = () => {
 
                 {/* Usage Tips */}
                 <div className="bg-gray-800/30 border border-gray-700/50 rounded-xl p-5">
-                    <h3 className="text-sm font-semibold text-gray-300 mb-3">使用提示</h3>
+                    <h3 className="text-sm font-semibold text-gray-300 mb-3">{t('runninghub.tipsTitle')}</h3>
                     <ul className="space-y-2 text-sm text-gray-400">
                         <li className="flex items-start gap-2">
                             <span className="text-cyan-400 mt-1">•</span>
-                            生成的工作流将保存到 ComfyUI 的 workflows 目录中
+                            {t('runninghub.tip1')}
                         </li>
                         <li className="flex items-start gap-2">
                             <span className="text-cyan-400 mt-1">•</span>
-                            请确保已安装 comfyui-photoshop、ComfyUI_RH_APICall、rgthree-comfy等必备插件
+                            {t('runninghub.tip2')}
                         </li>
                         <li className="flex items-start gap-2">
                             <span className="text-cyan-400 mt-1">•</span>
-                            API Key 会保存在本地配置中,请妥善保管
+                            {t('runninghub.tip3')}
                         </li>
                     </ul>
                 </div>

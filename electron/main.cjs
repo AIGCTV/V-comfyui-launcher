@@ -846,7 +846,7 @@ ipcMain.handle('create-model-symlink', async (event, sourcePath) => {
     if (!fs.existsSync(sourcePath)) {
       return {
         success: false,
-        message: '源目录不存在,请检查路径是否正确'
+        message: 'settings.messages.sourceDirNotExist'
       };
     }
 
@@ -862,7 +862,7 @@ ipcMain.handle('create-model-symlink', async (event, sourcePath) => {
         // It's a real directory
         return {
           success: false,
-          message: 'ComfyUI/models 目录已存在,请先重命名或移动到其他位置'
+          message: 'settings.messages.targetDirExists'
         };
       }
     }
@@ -898,7 +898,7 @@ ipcMain.handle('create-model-symlink', async (event, sourcePath) => {
 
     return {
       success: true,
-      message: '模型映射创建成功!'
+      message: 'settings.messages.symlinkCreated'
     };
 
   } catch (error) {
@@ -912,7 +912,8 @@ ipcMain.handle('create-model-symlink', async (event, sourcePath) => {
 
     return {
       success: false,
-      message: `创建失败: ${msg}`
+      message: 'settings.messages.symlinkCreateFailed',
+      error: msg
     };
   }
 });
