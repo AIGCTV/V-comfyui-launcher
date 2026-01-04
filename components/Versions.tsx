@@ -53,17 +53,17 @@ export const Versions: React.FC<VersionsProps> = ({ onUpdate, currentVersionId, 
                 <div className="flex justify-between items-start mb-4">
                     <div>
                         <div className="flex items-center gap-2 mb-1">
-                            <span className="text-gray-400 text-sm">远端地址:</span>
+                            <span className="text-gray-400 text-sm">{t('versions.remoteUrl')}:</span>
                             <a href="https://github.com/comfyanonymous/ComfyUI" target="_blank" rel="noreferrer" className="font-mono text-sm text-blue-400 hover:underline flex items-center gap-1">
                                 https://github.com/comfyanonymous/ComfyUI <ExternalLink size={10} />
                             </a>
                         </div>
                         <div className="flex items-center gap-2 mb-1">
-                            <span className="text-gray-400 text-sm">当前分支:</span>
+                            <span className="text-gray-400 text-sm">{t('versions.currentBranch')}:</span>
                             <span className="font-mono text-sm text-gray-200">master</span>
                         </div>
                         <div className="flex items-center gap-2">
-                            <span className="text-gray-400 text-sm">当前版本:</span>
+                            <span className="text-gray-400 text-sm">{t('versions.currentVersion')}:</span>
                             <span className={`font-mono text-sm ${isUpdating ? 'text-yellow-400 animate-pulse' : 'text-green-400'}`}>
                                 {localVersion?.fullHash || currentVersionId}
                             </span>
@@ -72,7 +72,7 @@ export const Versions: React.FC<VersionsProps> = ({ onUpdate, currentVersionId, 
                                     {localVersion.date}
                                 </span>
                             )}
-                            {isUpdating && <span className="text-yellow-400 text-sm">(更新中...)</span>}
+                            {isUpdating && <span className="text-yellow-400 text-sm">({t('versions.updating')})</span>}
                         </div>
                     </div>
 
@@ -83,16 +83,16 @@ export const Versions: React.FC<VersionsProps> = ({ onUpdate, currentVersionId, 
                                 ? 'bg-green-600 border-green-500 text-white hover:bg-green-700'
                                 : 'bg-gray-800 border-gray-600 text-gray-300 hover:bg-gray-700'
                                 }`}
-                            title={useProxy ? 'GitHub代理已启用,点击关闭' : 'GitHub代理已关闭,点击启用'}
+                            title={useProxy ? t('versions.proxyOnTip') : t('versions.proxyOffTip')}
                         >
-                            <Globe size={14} /> {useProxy ? '代理: 开' : '代理: 关'}
+                            <Globe size={14} /> {useProxy ? t('versions.proxyOn') : t('versions.proxyOff')}
                         </button>
                         <button
                             onClick={() => refreshAll(true)}
                             disabled={loading}
                             className="px-3 py-1.5 bg-gray-800 hover:bg-gray-700 border border-gray-600 rounded text-xs flex items-center gap-2 transition-colors"
                         >
-                            <RefreshCw size={14} className={loading ? 'animate-spin' : ''} /> 刷新列表
+                            <RefreshCw size={14} className={loading ? 'animate-spin' : ''} /> {t('versions.refresh')}
                         </button>
                     </div>
                 </div>
@@ -106,7 +106,7 @@ export const Versions: React.FC<VersionsProps> = ({ onUpdate, currentVersionId, 
                             : 'bg-trarent text-gray-500 hover:text-gray-300'
                             }`}
                     >
-                        稳定版
+                        {t('versions.stable')}
                     </button>
                     <button
                         onClick={() => setActiveTab('dev')}
@@ -115,7 +115,7 @@ export const Versions: React.FC<VersionsProps> = ({ onUpdate, currentVersionId, 
                             : 'bg-trarent text-gray-500 hover:text-gray-300'
                             }`}
                     >
-                        开发版
+                        {t('versions.dev')}
                     </button>
                 </div>
             </div>
@@ -124,15 +124,15 @@ export const Versions: React.FC<VersionsProps> = ({ onUpdate, currentVersionId, 
             <div className="flex-1 px-6 pb-6 overflow-hidden flex flex-col">
                 <div className="bg-gray-800 border border-gray-700 rounded-b-lg rounded-tr-lg flex flex-col h-full shadow-inner">
                     <div className="grid grid-cols-12 bg-gray-900/50 p-3 text-xs font-bold text-gray-400 border-b border-gray-700">
-                        <div className="col-span-2 pl-2">版本 ID (Hash)</div>
-                        <div className="col-span-6">更新内容</div>
-                        <div className="col-span-3">日期</div>
-                        <div className="col-span-1 text-center">操作</div>
+                        <div className="col-span-2 pl-2">{t('versions.colId')}</div>
+                        <div className="col-span-6">{t('versions.colContent')}</div>
+                        <div className="col-span-3">{t('versions.colDate')}</div>
+                        <div className="col-span-1 text-center">{t('versions.colAction')}</div>
                     </div>
                     <div className="overflow-x-auto overflow-y-auto flex-1 scrollbar-default bg-[#1e1e1e]">
                         {loading ? (
                             <div className="flex items-center justify-center h-full text-gray-500 gap-2">
-                                <RefreshCw className="animate-spin" size={20} /> 获取版本信息中...
+                                <RefreshCw className="animate-spin" size={20} /> {t('versions.loading')}
                             </div>
                         ) : (
                             <table className="w-full border-collapse min-w-[900px]">
@@ -166,7 +166,7 @@ export const Versions: React.FC<VersionsProps> = ({ onUpdate, currentVersionId, 
                                                 <td className={`py-3 w-[25%] font-mono text-xs ${isCurrent ? 'text-green-400/70' : 'text-gray-400'}`}>{ver.date}</td>
                                                 <td className="py-3 w-[9%] text-center pr-2">
                                                     {isCurrent ? <CheckCircle2 size={18} className="text-green-500 mx-auto" /> : (
-                                                        <button onClick={() => onUpdate(ver)} disabled={isUpdating || !isLinkable} className={`px-3 py-1 border rounded text-xs mx-auto w-16 ${(isUpdating || !isLinkable) ? 'border-gray-700 text-gray-600' : 'border-gray-600 text-gray-400 hover:text-white hover:bg-gray-700'}`}>切换</button>
+                                                        <button onClick={() => onUpdate(ver)} disabled={isUpdating || !isLinkable} className={`px-3 py-1 border rounded text-xs mx-auto w-16 ${(isUpdating || !isLinkable) ? 'border-gray-700 text-gray-600' : 'border-gray-600 text-gray-400 hover:text-white hover:bg-gray-700'}`}>{t('versions.switch')}</button>
                                                     )}
                                                 </td>
                                             </tr>
