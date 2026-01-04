@@ -1,7 +1,46 @@
 {
   "banner": "https://cdn.jsdelivr.net/gh/AIGCTV/V-comfyui-launcher@main/docs/images/banner.png",
   "announcement": {
-    "title": "欢迎使用 AIGCTV 启动器 v1.0.2",
-    "time": "2025-12-28"
+    "title": "欢迎使用 AIGCTV 启动器 v1.0.4",
+    "time": "2026-01-04"
+  },
+  "resources": [
+    {
+      "id": "comfyPack",
+      "url": "https://fcnindgiaxi4.feishu.cn/wiki/UcqtwbJzeiX5dbkiNGBcoClInlg"
+    },
+    {
+      "id": "modelLib",
+      "url": "https://pan.quark.cn/s/cc750e23e454"
+    },
+    {
+      "id": "knowledgeBase",
+      "url": "https://fcnindgiaxi4.feishu.cn/wiki/S50Hwm8qBiFM2YkTmhPcTwSnn2d"
+    },
+    {
+      "id": "codeRepo",
+      "url": "https://github.com/AIGCTV/comfyui-photoshop-fix"
+    },
+    {
+      "id": "welfare",
+      "url": "https://fcnindgiaxi4.feishu.cn/wiki/YgQKwKKqDigMvak1xrLczvOrnOb"
+    }
+  ],
+  "tutorials": {
+    "viewMoreUrl": "https://www.iesdouyin.com/share/playlet/detail/7410359478745073715",
+    "list": [
+      {
+        "title": "PS-AI插件使用全攻略",
+        "platform": "B站",
+        "views": "全网200W+",
+        "url": "https://space.bilibili.com/3546670109296710/lists/6277151"
+      },
+      {
+        "title": "PS-石头AI插件教程",
+        "platform": "B站",
+        "views": "全网10W+",
+        "url": "https://space.bilibili.com/3546670109296710/lists/6276896"
+      }
+    ]
   }
 }
