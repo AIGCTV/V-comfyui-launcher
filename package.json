@@ -1,0 +1,96 @@
+{
+  "name": "comfyui-portable-launcher",
+  "productName": "ComfyUI Launcher",
+  "version": "1.0.3",
+  "main": "electron/main.cjs",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "node generate-build-info.cjs && tsc && vite build",
+    "preview": "vite preview",
+    "electron": "wait-on tcp:5173 && electron .",
+    "electron:dev": "concurrently -k \"cross-env BROWSER=none npm run dev\" \"npm run electron\"",
+    "electron:build": "node generate-build-info.cjs && npm run build && electron-builder",
+    "electron:build:portable": "node generate-build-info.cjs && npm run build && electron-builder --win portable",
+    "electron:build:dir": "node generate-build-info.cjs && npm run build && electron-builder --win dir",
+    "electron:build:zip": "node generate-build-info.cjs && npm run build && electron-builder --win zip"
+  },
+  "dependencies": {
+    "extract-zip": "^2.0.1",
+    "lucide-react": "^0.263.1",
+    "node-7z-archive": "^1.1.7",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-window": "^2.2.3"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.15",
+    "@types/react-dom": "^18.2.7",
+    "@types/react-window": "^1.8.8",
+    "@vitejs/plugin-react": "^4.0.3",
+    "concurrently": "^8.2.2",
+    "cross-env": "^7.0.3",
+    "electron": "^28.1.0",
+    "electron-builder": "^24.9.1",
+    "electron-packager": "^17.1.2",
+    "javascript-obfuscator": "^4.1.0",
+    "png-to-ico": "^3.0.1",
+    "rcedit": "^4.0.1",
+    "sharp": "^0.34.5",
+    "terser": "^5.44.1",
+    "to-ico": "^1.1.5",
+    "typescript": "^5.0.2",
+    "vite": "^4.4.5",
+    "wait-on": "^7.2.0"
+  },
+  "build": {
+    "appId": "com.aigctv.launcher",
+    "productName": "AIGCTV启动器",
+    "copyright": "Copyright © 2024 AIGCTV",
+    "directories": {
+      "output": "dist-electron"
+    },
+    "files": [
+      "dist/**/*",
+      "electron/**/*",
+      "public/**/*",
+      "node_modules/**/*",
+      "!node_modules/**/README*",
+      "!node_modules/**/test/**",
+      "!node_modules/**/*.map"
+    ],
+    "asar": true,
+    "asarUnpack": [
+      "**/node_modules/7zip-bin/**/*"
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "public/icon.ico",
+      "artifactName": "${productName}_Setup_${version}.${ext}",
+      "requestedExecutionLevel": "asInvoker",
+      "signAndEditExecutable": false
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "perMachine": false,
+      "deleteAppDataOnUninstall": false,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "AIGCTV启动器",
+      "installerHeaderIcon": "public/icon.ico",
+      "uninstallerIcon": "public/icon.ico",
+      "license": "LICENSE.txt"
+    },
+    "portable": {
+      "artifactName": "${productName}_Portable_${version}.${ext}"
+    }
+  }
+}

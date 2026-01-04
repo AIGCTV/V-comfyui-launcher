@@ -6,10 +6,29 @@
 !README.md
 !README_CN.md
 !LICENSE.txt
+!LICENSE.electron.txt
 
 # Include docs folder and all its contents
 !docs/
 !docs/**
+
+# Include .agent folder for workflows
+!.agent/
+!.agent/**
+
+# Include source code for development
+!electron/
+!electron/**
+!components/
+!components/**
+!services/
+!services/**
+!*.tsx
+!*.ts
+!*.cjs
+!*.json
+!*.html
+!*.css
 
 # Logs (in case they appear in docs)
 *.log

@@ -1,0 +1,5 @@
+{
+  "name": "ComfyUI Portable Launcher",
+  "description": "A modern, react-based launcher interface for local ComfyUI portable packages with version control and environment management.",
+  "requestFramePermissions": []
+}
