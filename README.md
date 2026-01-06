@@ -71,6 +71,9 @@ ComfyUI_windows_portable/ (Root)
 ---
 
 ## 📖 Documentation
+👉 **[Click to View "V ComfyUI Launcher Tutorial"](https://www.youtube.com/watch?v=OL3lZimy85s)**
+
+[![ComfyUI V-Launcher Tutorial](https://img.youtube.com/vi/OL3lZimy85s/0.jpg)](https://www.youtube.com/watch?v=OL3lZimy85s)
 
 We provide specific operating manuals for each feature page, please refer to:
 
