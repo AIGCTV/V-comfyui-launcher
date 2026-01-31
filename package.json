@@ -1,7 +1,7 @@
 {
   "name": "comfyui-portable-launcher",
   "productName": "ComfyUI Launcher",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "main": "electron/main.cjs",
   "type": "module",
   "scripts": {
