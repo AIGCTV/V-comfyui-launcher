@@ -1,17 +1,15 @@
 ---
-description: 打包启动器（单文件exe + unpacked zip），自动修复图标
+description: 打包启动器（单文件exe + unpacked zip），自动修复图标和版本信息
 ---
 
-# 打包启动器工作流
+# 打包启动器
 
-此工作流用于打包 ComfyUI 启动器，包含单文件 portable exe 和 unpacked zip 两个版本。
+> **新特性**：现在集成了 `afterPack` 钩子，打包过程中会自动修复图标和版本元数据。
 
-## 问题说明
+## 前置准备
 
-**为什么图标会出错？**
-1. `electron-builder` 的 `portable` 模式有时不能正确嵌入图标到 exe 文件中
-2. Windows 有图标缓存机制，即使图标已更新，文件管理器可能仍显示旧图标
-3. 需要用 `rcedit` 工具在打包后二次修复图标
+1. 确保 `package.json` 中的版本号已更新
+2. 确保 `App.tsx` 中的 `launcherVersion` 已更新
 
 ## 打包步骤
 
@@ -19,48 +17,61 @@ description: 打包启动器（单文件exe + unpacked zip），自动修复图�
 
 // turbo-all
 
-### 1. 更新版本号
-修改 `package.json` 中的 `version` 字段为指定版本号。
-
-### 2. 清理缓存
+### 1. 清理旧的构建缓存
 ```powershell
 Remove-Item -Recurse -Force dist, dist-electron -ErrorAction SilentlyContinue
 ```
 
-### 3. 打包 Portable 单文件 exe
+### 2. 执行一键构建 (推荐)
+```powershell
+npx electron-builder --win
+```
+此命令会同时：
+1. 构建前端
+2. 构建 Unpacked 版 -> **自动触发 Hook 修复元数据**
+3. 构建 Portable 版 (基于已修复的文件)
+
+### 3. (可选) 分步构建
+如果一键构建失败，可以分步执行：
+
+**Step A: 构建 Unpacked 版本**
+```powershell
+npm run electron:build:dir
+```
+(构建完成后 `dist-electron/win-unpacked/VLauncher.exe` 已经是修复好的状态)
+
+**Step B: 构建 Portable 版本**
 ```powershell
 npm run electron:build:portable
 ```
 
-### 4. 打包 Unpacked 目录
-```powershell
-npm run electron:build:dir
-```
-
-### 5. 修复 Unpacked exe 图标（关键步骤！）
-```powershell
-node -e "require('rcedit')(require('path').resolve('dist-electron/win-unpacked/AIGCTV启动器.exe'), { icon: require('path').resolve('public/icon.ico') }).then(() => console.log('Icon fixed!')).catch(e => console.error(e))"
-```
-
-### 6. 刷新 Windows 图标缓存
+### 4. 刷新 Windows 图标缓存
 ```powershell
 ie4uinit.exe -show
 ```
 
-### 7. 打包 Unpacked 为 zip
+### 5. 打包 ZIP
+将自动生成的Unpacked目录打包为ZIP：
 ```powershell
-Compress-Archive -Path "dist-electron\win-unpacked\*" -DestinationPath "dist-electron\V_comfyui_launcher_portable_VERSION.zip" -Force
+Compress-Archive -Path "dist-electron\win-unpacked\*" -DestinationPath "dist-electron\V_comfyui_launcher_portable_1.0.63.zip" -Force
 ```
-（将 VERSION 替换为实际版本号）
+（将版本号替换为实际版本）
 
 ## 输出文件
 
 打包完成后，在 `dist-electron` 目录下会有：
-- `V_comfyui_launcher_x.x.x.exe` - 单文件便携版
-- `V_comfyui_launcher_portable_x.x.x.zip` - 解压版（包含所有运行时文件）
+- `V_comfyui_launcher_1.0.63.exe` - 单文件便携版 (75MB+)
+- `V_comfyui_launcher_portable_1.0.63.zip` - 解压版
 
-## 注意事项
+## 验证清单
 
-1. **图标缓存问题**：如果在原目录看到错误图标，复制到其他位置查看，或重启 Explorer
-2. **Portable exe 图标**：Portable exe 是自解压格式，其图标由 electron-builder 在打包时嵌入，通常不需要额外修复
-3. **Unpacked exe 图标**：必须用 rcedit 修复，因为 electron-builder --dir 模式不会正确嵌入图标
+- [ ] Portable EXE：双击运行，检查任务管理器进程名是否为 **VLauncher**
+- [ ] Portable EXE：文件属性 -> 详细信息，应包含 "AIGCTV" 等版权信息
+- [ ] ZIP 包：解压后检查 VLauncher.exe 的版本信息
+
+## 故障排除
+
+如果构建过程中 Hook 报错：
+1. 确保 `npm install` 已正确安装所有依赖（特别是 `rcedit`）
+2. 检查 `public/icon.ico` 是否存在
+3. 手动测试 `fix-version-info.cjs` 脚本看看是否独立运行正常

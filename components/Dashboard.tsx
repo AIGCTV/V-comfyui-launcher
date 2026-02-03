@@ -37,7 +37,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
     onStop
 }) => {
     // i18n
-    const { t } = useTranslation();
+    const { t, language } = useTranslation();
 
     // Remote config state - 使用共享配置服务
     const [config, setConfig] = useState<LauncherConfig>(() => getCachedConfig() || DEFAULT_CONFIG);
@@ -76,6 +76,13 @@ export const Dashboard: React.FC<DashboardProps> = ({
 
     const isRunning = status === AppStatus.RUNNING || status === AppStatus.STARTING;
 
+    // Determine announcement title based on language
+    const announcementTitle = (language === 'en' && config.announcement.title_en)
+        ? config.announcement.title_en
+        : (language === 'zh' && config.announcement.title_zh)
+            ? config.announcement.title_zh
+            : config.announcement.title;
+
     return (
         <div className="h-full flex flex-col bg-gray-900 relative">
 
@@ -97,7 +104,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
                             <span className="text-xs font-bold text-cyan-400">📢 {t('dashboard.announcement')}</span>
-                            <span className="text-xs text-gray-300">{config.announcement.title}</span>
+                            <span className="text-xs text-gray-300">{announcementTitle}</span>
                         </div>
                         <span className="text-xs text-gray-500">{config.announcement.time}</span>
                     </div>

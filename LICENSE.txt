@@ -12,7 +12,7 @@ After installation, the directory structure should look like:
     +-- ComfyUI\
     +-- python_embeded\
     +-- launcher\          <- Launcher installed here
-    |   +-- AIGCTV Launcher.exe
+    |   +-- VLauncher.exe
     +-- ...
 
 [Portable Version Users]
@@ -24,4 +24,4 @@ If you downloaded the portable version (Portable), please extract and place file
 2. If installed in the wrong location, the launcher may not find ComfyUI
 3. Run as administrator on first launch (if model mapping is needed)
 
-Copyright (C) 2024 AIGCTV. All rights reserved.
+Copyright (C) 2026 AIGCTV. All rights reserved.
