@@ -77,16 +77,7 @@ export const Versions: React.FC<VersionsProps> = ({ onUpdate, currentVersionId, 
                     </div>
 
                     <div className="flex gap-2">
-                        <button
-                            onClick={() => onProxyToggle(!useProxy)}
-                            className={`px-3 py-1.5 border rounded text-xs flex items-center gap-2 transition-colors ${useProxy
-                                ? 'bg-green-600 border-green-500 text-white hover:bg-green-700'
-                                : 'bg-gray-800 border-gray-600 text-gray-300 hover:bg-gray-700'
-                                }`}
-                            title={useProxy ? t('versions.proxyOnTip') : t('versions.proxyOffTip')}
-                        >
-                            <Globe size={14} /> {useProxy ? t('versions.proxyOn') : t('versions.proxyOff')}
-                        </button>
+
                         <button
                             onClick={() => refreshAll(true)}
                             disabled={loading}

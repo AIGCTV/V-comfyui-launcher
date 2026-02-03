@@ -1,7 +1,7 @@
 {
   "name": "comfyui-portable-launcher",
-  "productName": "ComfyUI Launcher",
-  "version": "1.0.5",
+  "productName": "VLauncher",
+  "version": "1.0.63",
   "main": "electron/main.cjs",
   "type": "module",
   "scripts": {
@@ -45,8 +45,10 @@
   },
   "build": {
     "appId": "com.aigctv.launcher",
-    "productName": "AIGCTV启动器",
-    "copyright": "Copyright © 2024 AIGCTV",
+    "productName": "VLauncher",
+    "executableName": "VLauncher",
+    "copyright": "Copyright © 2026 AIGCTV",
+    "afterPack": "./scripts/afterPack.cjs",
     "directories": {
       "output": "dist-electron"
     },
@@ -57,7 +59,8 @@
       "node_modules/**/*",
       "!node_modules/**/README*",
       "!node_modules/**/test/**",
-      "!node_modules/**/*.map"
+      "!node_modules/**/*.map",
+      "build-info.json"
     ],
     "asar": true,
     "asarUnpack": [
@@ -66,28 +69,22 @@
     "win": {
       "target": [
         {
-          "target": "nsis",
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "dir",
           "arch": [
             "x64"
           ]
         }
       ],
       "icon": "public/icon.ico",
-      "artifactName": "V_comfyui_launcher_Setup_${version}.${ext}",
       "requestedExecutionLevel": "asInvoker",
-      "signAndEditExecutable": false
-    },
-    "nsis": {
-      "oneClick": false,
-      "allowToChangeInstallationDirectory": true,
-      "perMachine": false,
-      "deleteAppDataOnUninstall": false,
-      "createDesktopShortcut": true,
-      "createStartMenuShortcut": true,
-      "shortcutName": "AIGCTV启动器",
-      "installerHeaderIcon": "public/icon.ico",
-      "uninstallerIcon": "public/icon.ico",
-      "license": "LICENSE.txt"
+      "signAndEditExecutable": false,
+      "sign": null
     },
     "portable": {
       "artifactName": "V_comfyui_launcher_${version}.${ext}"

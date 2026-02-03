@@ -10,7 +10,13 @@ const emptySettings: AppSettings = {
   gitPath: '',
   customArgs: '',
   useGitHubProxy: false,
-  psPluginPath: ''
+  psPluginPath: '',
+  useGithubMirror: false,
+  githubMirrorUrl: '',
+  usePypiMirror: false,
+  pypiMirrorUrl: '',
+  useHfMirror: false,
+  hfMirrorUrl: ''
 };
 
 // Persistent cache using localStorage

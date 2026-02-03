@@ -29,7 +29,17 @@ export interface AppSettings {
   pythonPath: string;  // Empty = use portable, otherwise custom path
   gitPath: string;     // Empty = use portable, otherwise custom path
   customArgs: string;
-  useGitHubProxy: boolean;
+  useGitHubProxy: boolean; // Deprecated, keep for migration
+
+  // Network Settings
+  useGithubMirror: boolean;
+  githubMirrorUrl: string;
+
+  usePypiMirror: boolean;
+  pypiMirrorUrl: string;
+
+  useHfMirror: boolean;
+  hfMirrorUrl: string;
   modelsPath?: string;  // Shared models directory path
   psPluginPath?: string; // Photoshop plugins directory path
 }

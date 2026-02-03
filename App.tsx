@@ -16,7 +16,14 @@ const DEFAULT_SETTINGS: AppSettings = {
   gitPath: '',     // Empty = use portable git
   customArgs: '',
   useGitHubProxy: false,
-  psPluginPath: ''  // Empty = default path
+  psPluginPath: '',  // Empty = default path
+  // Network Defaults matching main.cjs
+  useGithubMirror: false,
+  githubMirrorUrl: 'https://ghproxy.net/',
+  usePypiMirror: false,
+  pypiMirrorUrl: 'https://pypi.tuna.tsinghua.edu.cn/simple',
+  useHfMirror: false,
+  hfMirrorUrl: 'https://hf-mirror.com'
 };
 
 const App: React.FC = () => {
@@ -35,7 +42,7 @@ const App: React.FC = () => {
   const [localComfyVersion, setLocalComfyVersion] = useState<{ hash: string, fullHash: string, date: string }>({ hash: 'Loading...', fullHash: '', date: '' });
 
   // Launcher Version Info
-  const [launcherVersion, setLauncherVersion] = useState<{ version: string; buildDate: string }>({ version: '1.0.1', buildDate: '2025-12-26 00:00:00' });
+  const [launcherVersion, setLauncherVersion] = useState<{ version: string; buildDate: string }>({ version: '1.0.63', buildDate: '2026-01-31 14:38:00' });
 
   const addLog = useCallback((message: string, type: 'info' | 'error' | 'system' = 'info') => {
     setLogs(prev => [...prev, {

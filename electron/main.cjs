@@ -343,6 +343,19 @@ ipcMain.handle('start-comfy', async (event, settings, mode) => {
       typeEnv.PATH = `${gitDir};${typeEnv.PATH || ''}`;
     }
 
+    // Inject Network Mirrors
+    // Inject Network Mirrors (Robust)
+    const pypiUrl = settings.pypiMirrorUrl || 'https://pypi.tuna.tsinghua.edu.cn/simple';
+    if (settings.usePypiMirror) {
+      typeEnv['PIP_INDEX_URL'] = pypiUrl;
+      sendLog(`[Env] 注入 PIP_INDEX_URL: ${pypiUrl}`, 'info');
+    }
+    const hfUrl = settings.hfMirrorUrl || 'https://hf-mirror.com';
+    if (settings.useHfMirror) {
+      typeEnv['HF_ENDPOINT'] = hfUrl;
+      sendLog(`[Env] 注入 HF_ENDPOINT: ${hfUrl}`, 'info');
+    }
+
     // Spawn Python directly with UTF-8 encoding environment
     comfyProcess = spawn(pythonPath, args, {
       cwd: comfyDir,
@@ -527,6 +540,7 @@ ipcMain.handle('stop-comfy', async () => {
 
 // Open terminal
 ipcMain.handle('open-terminal', async (event, settings) => {
+  console.log('[Terminal] Opening with Settings:', JSON.stringify(settings));
   try {
     const launcherDir = getLauncherDir();
     const comfyDir = getComfyDir();
@@ -590,6 +604,19 @@ ipcMain.handle('open-terminal', async (event, settings) => {
       }
       scriptContent += `set "PATH=%PATH%;${gitDir}"\n`;
       scriptContent += `echo Git: ${gitDir}\n`;
+    }
+
+    // Inject Network Mirrors
+    // Inject Network Mirrors
+    const pypiUrl = settings.pypiMirrorUrl || 'https://pypi.tuna.tsinghua.edu.cn/simple';
+    if (settings.usePypiMirror) {
+      scriptContent += `set "PIP_INDEX_URL=${pypiUrl}"\n`;
+      scriptContent += `echo [Env] PIP Mirror Activated: ${pypiUrl}\n`;
+    }
+    const hfUrl = settings.hfMirrorUrl || 'https://hf-mirror.com';
+    if (settings.useHfMirror) {
+      scriptContent += `set "HF_ENDPOINT=${hfUrl}"\n`;
+      scriptContent += `echo [Env] HuggingFace Mirror Activated: ${hfUrl}\n`;
     }
 
     scriptContent += `echo ========================================\n`;
@@ -682,7 +709,9 @@ ipcMain.handle('git-command', async (event, command, settings) => {
     }
 
     // If proxy is enabled and command is fetch or pull, use ghproxy URL rewrite approach
-    const needsProxy = settings.useGitHubProxy && (command.includes('fetch') || command.includes('pull') || command.includes('clone'));
+    const useGitMirror = settings.useGithubMirror || settings.useGitHubProxy;
+    const gitMirrorUrl = (settings.githubMirrorUrl || 'https://ghproxy.net/').replace(/\/$/, '');
+    const needsProxy = useGitMirror && (command.includes('fetch') || command.includes('pull') || command.includes('clone'));
 
     const runGitCommand = (args) => {
       return new Promise((res, rej) => {
@@ -718,8 +747,8 @@ ipcMain.handle('git-command', async (event, command, settings) => {
 
         // Only modify if it's a GitHub URL
         if (originalUrl && originalUrl.includes('github.com')) {
-          // Create proxied URL: https://gh-proxy.com/https://github.com/...
-          const proxiedUrl = `https://gh-proxy.com/${originalUrl}`;
+          // Create proxied URL
+          const proxiedUrl = `${gitMirrorUrl}/${originalUrl}`;
           // console.log(`[Git Proxy] Setting proxied URL: ${proxiedUrl}`);
 
           try {
@@ -938,17 +967,39 @@ ipcMain.handle('open-url', async (event, url) => {
 // Config persistence
 const configPath = path.join(getLauncherDir(), 'launcher-config.json');
 
-ipcMain.handle('load-settings', async () => {
+// Default settings
+const defaultSettings = {
+  pythonPath: '',
+  gitPath: '',
+  customArgs: '',
+  useGitHubProxy: false,
+  modelsPath: '',
+  psPluginPath: '',
+  // Network Settings Defaults
+  useGithubMirror: false,
+  githubMirrorUrl: 'https://ghproxy.net/',
+  usePypiMirror: false,
+  pypiMirrorUrl: 'https://pypi.tuna.tsinghua.edu.cn/simple',
+  useHfMirror: false,
+  hfMirrorUrl: 'https://hf-mirror.com'
+};
+
+// Helper: Get settings with defaults
+function getSettings() {
   const fs = require('fs');
   try {
     if (fs.existsSync(configPath)) {
       const data = fs.readFileSync(configPath, 'utf-8');
-      return JSON.parse(data);
+      return { ...defaultSettings, ...JSON.parse(data) };
     }
   } catch (e) {
     console.error('Failed to load settings:', e);
   }
-  return null;
+  return defaultSettings;
+}
+
+ipcMain.handle('load-settings', async () => {
+  return getSettings();
 });
 
 ipcMain.handle('save-settings', async (event, settings) => {
@@ -1821,10 +1872,17 @@ ipcMain.handle('update-ps-plugin', async (event, { psPluginPath }) => {
       return { success: false, message: '未找到下载文件' };
     }
 
-    const asset = updateInfo.assets.find(a => a.name.endsWith('.7z'));
+    // 优先查找 .7z，其次查找 .zip
+    let asset = updateInfo.assets.find(a => a.name.endsWith('.7z'));
+    let archiveType = '7z';
     if (!asset) {
-      return { success: false, message: '未找到.7z压缩包' };
+      asset = updateInfo.assets.find(a => a.name.endsWith('.zip'));
+      archiveType = 'zip';
     }
+    if (!asset) {
+      return { success: false, message: '未找到压缩包 (.7z 或 .zip)' };
+    }
+    console.log('[PS Plugin] Found archive:', asset.name, 'Type:', archiveType);
 
     // Step 2: Download the 7z file (with redirect handling)
     const tempDir = path.join(app.getPath('temp'), 'ps-plugin-update');
@@ -1833,7 +1891,16 @@ ipcMain.handle('update-ps-plugin', async (event, { psPluginPath }) => {
     }
 
     const downloadPath = path.join(tempDir, asset.name);
-    const downloadUrl = asset.browser_download_url;
+    let downloadUrl = asset.browser_download_url;
+
+    // Apply GitHub Mirror if enabled
+    const settings = getSettings(); // Read latest settings
+    const useMirror = settings.useGithubMirror || settings.useGitHubProxy;
+    if (useMirror) {
+      const mirrorUrl = (settings.githubMirrorUrl || 'https://ghproxy.net/').replace(/\/$/, '');
+      downloadUrl = `${mirrorUrl}/${downloadUrl}`;
+      console.log('[PS Plugin] Using mirror download:', downloadUrl);
+    }
 
     // Helper function to follow redirects
     const downloadWithRedirects = (url, destPath, maxRedirects = 5) => {
@@ -1887,9 +1954,22 @@ ipcMain.handle('update-ps-plugin', async (event, { psPluginPath }) => {
       fs.mkdirSync(extractPath, { recursive: true });
     }
 
-    // Use 7za.exe bundled in node_modules (from 7zip-bin package)
-    const sevenZipPath = path.join(getLauncherDir(), 'node_modules', '7zip-bin', 'win', 'x64', '7za.exe');
+    // 获取 7za.exe 路径 - 需要处理开发环境 vs 打包环境
+    let sevenZipPath;
+    if (app.isPackaged) {
+      // 打包后，7zip-bin 在 resources/app.asar.unpacked/node_modules 下
+      sevenZipPath = path.join(process.resourcesPath, 'app.asar.unpacked', 'node_modules', '7zip-bin', 'win', 'x64', '7za.exe');
+    } else {
+      // 开发环境，直接使用 node_modules
+      sevenZipPath = path.join(__dirname, '..', 'node_modules', '7zip-bin', 'win', 'x64', '7za.exe');
+    }
     console.log('[PS Plugin] Using 7z path:', sevenZipPath);
+
+    // 验证 7za.exe 是否存在
+    if (!fs.existsSync(sevenZipPath)) {
+      console.error('[PS Plugin] 7za.exe not found at:', sevenZipPath);
+      return { success: false, message: `7za.exe 未找到，请检查安装完整性: ${sevenZipPath}` };
+    }
 
     await new Promise((resolve, reject) => {
       execFile(sevenZipPath, ['x', downloadPath, `-o${extractPath}`, '-y'], (error, stdout, stderr) => {

@@ -4,6 +4,13 @@
   "customArgs": "",
   "useGitHubProxy": false,
   "psPluginPath": "",
+  "useGithubMirror": false,
+  "githubMirrorUrl": "https://ghproxy.net/",
+  "usePypiMirror": false,
+  "pypiMirrorUrl": "https://pypi.tuna.tsinghua.edu.cn/simple",
+  "useHfMirror": false,
+  "hfMirrorUrl": "https://hf-mirror.com",
+  "modelsPath": "",
   "usePortablePython": true,
   "banner": "https://cdn.jsdelivr.net/gh/AIGCTV/V-comfyui-launcher@main/docs/images/banner.png",
   "announcement": {
@@ -48,6 +55,5 @@
         "url": "https://space.bilibili.com/3546670109296710/lists/6276896"
       }
     ]
-  },
-  "modelsPath": ""
+  }
 }

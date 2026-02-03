@@ -43,6 +43,8 @@ export interface LauncherConfig {
     banner: string;
     announcement: {
         title: string;
+        title_zh?: string;
+        title_en?: string;
         time: string;
     };
     resources?: ResourceConfig[];
@@ -72,6 +74,8 @@ export const DEFAULT_CONFIG: LauncherConfig = {
     banner: 'banner.png',
     announcement: {
         title: '欢迎使用 AIGCTV 启动器',
+        title_zh: '欢迎使用 AIGCTV 启动器',
+        title_en: 'Welcome to AIGCTV Launcher',
         time: '2025-12-17',
     },
     resources: DEFAULT_RESOURCES,
@@ -180,10 +184,13 @@ export const loadConfig = async (
     // 2. 后台拉取最新配置
     const remoteConfig = await fetchRemoteConfig();
     if (remoteConfig) {
-        // 合并默认值，确保新增字段有兜底
         const mergedConfig: LauncherConfig = {
             ...DEFAULT_CONFIG,
             ...remoteConfig,
+            announcement: {
+                ...DEFAULT_CONFIG.announcement,
+                ...(remoteConfig.announcement || {})
+            },
             resources: remoteConfig.resources || DEFAULT_RESOURCES,
             tutorials: remoteConfig.tutorials || DEFAULT_TUTORIALS,
         };

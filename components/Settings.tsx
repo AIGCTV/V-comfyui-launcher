@@ -282,34 +282,139 @@ export const Settings: React.FC<SettingsProps> = ({ settings, onSave }) => {
                             </div>
                         </div>
 
-                        {/* GitHub Proxy */}
+                        {/* Old GitHub Proxy - Moved to Network Settings */}
+                    </div>
+                </section>
+
+
+
+                {/* SECTION 4: NETWORK SETTINGS */}
+                <section>
+                    <div className="flex items-center gap-4 mb-5">
+                        <div className="h-7 w-1.5 bg-indigo-500 rounded-full shadow-[0_0_10px_rgba(99,102,241,0.5)]"></div>
+                        <h1 className="text-xl font-bold text-white tracking-wide">
+                            {t('settings.networkSettings')}
+                        </h1>
+                        <div className="h-px bg-gray-800 flex-1 ml-4" />
+                    </div>
+
+                    <div className="space-y-4 pl-1">
+                        {/* Git Mirror */}
                         <div className={cardClass}>
-                            <div className={`${iconWrapperClass} bg-green-600/20 text-green-400`}>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                    <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
-                                    <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
-                                </svg>
+                            <div className={`${iconWrapperClass} bg-indigo-600/20 text-indigo-400`}>
+                                <div className="font-bold text-xs">GIT</div>
                             </div>
                             <div className={labelWrapperClass}>
-                                <div className="text-white font-medium text-sm">{t('settings.useGitHubProxy')}</div>
-                                <div className="text-gray-500 text-xs">{t('settings.githubProxyDesc')}</div>
+                                <div className="text-white font-medium text-sm">{t('settings.gitMirror')}</div>
+                                <div className="text-gray-500 text-xs">{t('settings.gitMirrorDesc')}</div>
+                            </div>
+                            <div className={inputWrapperClass}>
+                                <div className={`flex-1 px-3 py-2 text-sm font-mono ${formData.useGithubMirror ? 'text-green-400' : 'text-gray-500'}`}>
+                                    {formData.useGithubMirror ? 'https://ghproxy.net/' : '直连模式 (由网络环境决定)'}
+                                </div>
                             </div>
                             <div className="ml-auto">
                                 <label className="relative inline-flex items-center cursor-pointer">
                                     <input
                                         type="checkbox"
-                                        checked={formData.useGitHubProxy || false}
-                                        onChange={(e) => handleChange('useGitHubProxy', e.target.checked)}
+                                        checked={formData.useGithubMirror || false}
+                                        onChange={(e) => {
+                                            const checked = e.target.checked;
+                                            const newSettings = {
+                                                ...formData,
+                                                useGithubMirror: checked,
+                                                useGitHubProxy: checked,
+                                                githubMirrorUrl: 'https://ghproxy.net/'
+                                            };
+                                            setFormData(newSettings);
+                                            onSave(newSettings);
+                                        }}
                                         className="sr-only peer"
                                     />
-                                    <div className="w-10 h-5 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-green-600"></div>
+                                    <div className="w-10 h-5 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:!bg-blue-600 peer-checked:border-blue-600"></div>
+                                </label>
+                            </div>
+                        </div>
+
+                        {/* PyPI Mirror */}
+                        <div className={cardClass}>
+                            <div className={`${iconWrapperClass} bg-blue-600/20 text-blue-400`}>
+                                <div className="font-bold text-xs">PIP</div>
+                            </div>
+                            <div className={labelWrapperClass}>
+                                <div className="text-white font-medium text-sm">{t('settings.pypiMirror')}</div>
+                                <div className="text-gray-500 text-xs">{t('settings.pypiMirrorDesc')}</div>
+                            </div>
+                            <div className={inputWrapperClass}>
+                                <div className="flex-1 flex items-center bg-gray-900 border border-gray-700 rounded-lg overflow-hidden">
+                                    <select
+                                        value={['https://pypi.tuna.tsinghua.edu.cn/simple', 'https://mirrors.aliyun.com/pypi/simple/', 'https://mirrors.cloud.tencent.com/pypi/simple', 'https://repo.huaweicloud.com/repository/pypi/simple'].includes(formData.pypiMirrorUrl || 'https://pypi.tuna.tsinghua.edu.cn/simple') ? (formData.pypiMirrorUrl || 'https://pypi.tuna.tsinghua.edu.cn/simple') : 'https://pypi.tuna.tsinghua.edu.cn/simple'}
+                                        onChange={(e) => {
+                                            handleChange('pypiMirrorUrl', e.target.value);
+                                        }}
+                                        disabled={!formData.usePypiMirror}
+                                        className={`flex-1 bg-gray-900 border-none px-3 py-2 text-gray-200 text-sm focus:ring-0 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed`}
+                                        style={{ backgroundColor: '#111827', color: '#e5e7eb' }}
+                                    >
+                                        <option value="https://pypi.tuna.tsinghua.edu.cn/simple" className="bg-gray-900 text-gray-200">清华大学 (https://pypi.tuna.tsinghua.edu.cn/simple)</option>
+                                        <option value="https://mirrors.aliyun.com/pypi/simple/" className="bg-gray-900 text-gray-200">阿里云 (https://mirrors.aliyun.com/pypi/simple/)</option>
+                                        <option value="https://mirrors.cloud.tencent.com/pypi/simple" className="bg-gray-900 text-gray-200">腾讯云 (https://mirrors.cloud.tencent.com/pypi/simple)</option>
+                                        <option value="https://repo.huaweicloud.com/repository/pypi/simple" className="bg-gray-900 text-gray-200">华为云 (https://repo.huaweicloud.com/repository/pypi/simple)</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div className="ml-auto">
+                                <label className="relative inline-flex items-center cursor-pointer">
+                                    <input
+                                        type="checkbox"
+                                        checked={formData.usePypiMirror || false}
+                                        onChange={(e) => handleChange('usePypiMirror', e.target.checked)}
+                                        className="sr-only peer"
+                                    />
+                                    <div className="w-10 h-5 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:!bg-blue-600 peer-checked:border-blue-600"></div>
+                                </label>
+                            </div>
+                        </div>
+
+                        {/* HuggingFace Mirror */}
+                        <div className={cardClass}>
+                            <div className={`${iconWrapperClass} bg-yellow-600/20 text-yellow-400`}>
+                                <div className="font-bold text-xs">HF</div>
+                            </div>
+                            <div className={labelWrapperClass}>
+                                <div className="text-white font-medium text-sm">{t('settings.hfMirror')}</div>
+                                <div className="text-gray-500 text-xs">{t('settings.hfMirrorDesc')}</div>
+                            </div>
+                            <div className={inputWrapperClass}>
+                                <div className={`flex-1 px-3 py-2 text-sm font-mono ${formData.useHfMirror ? 'text-green-400' : 'text-gray-500'}`}>
+                                    {formData.useHfMirror ? 'https://hf-mirror.com' : '直连模式 (由网络环境决定)'}
+                                </div>
+                            </div>
+                            <div className="ml-auto">
+                                <label className="relative inline-flex items-center cursor-pointer">
+                                    <input
+                                        type="checkbox"
+                                        checked={formData.useHfMirror || false}
+                                        onChange={(e) => {
+                                            const checked = e.target.checked;
+                                            const newSettings = {
+                                                ...formData,
+                                                useHfMirror: checked,
+                                                hfMirrorUrl: 'https://hf-mirror.com'
+                                            };
+                                            setFormData(newSettings);
+                                            onSave(newSettings);
+                                        }}
+                                        className="sr-only peer"
+                                    />
+                                    <div className="w-10 h-5 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:!bg-blue-600 peer-checked:border-blue-600"></div>
                                 </label>
                             </div>
                         </div>
                     </div>
                 </section>
 
-                {/* SECTION 4: PS PLUGIN SETTINGS */}
+                {/* SECTION 5: PS PLUGIN SETTINGS */}
                 <section>
                     <div className="flex items-center gap-4 mb-5">
                         <div className="h-7 w-1.5 bg-cyan-500 rounded-full shadow-[0_0_10px_rgba(6,182,212,0.5)]"></div>
@@ -368,6 +473,8 @@ export const Settings: React.FC<SettingsProps> = ({ settings, onSave }) => {
                     </div>
                 </section>
             </div>
-        </div>
+
+
+        </div >
     );
 };
