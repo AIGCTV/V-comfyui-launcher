@@ -1,7 +1,7 @@
 {
   "name": "comfyui-portable-launcher",
   "productName": "VLauncher",
-  "version": "1.0.63",
+  "version": "1.0.65",
   "main": "electron/main.cjs",
   "type": "module",
   "scripts": {
@@ -64,7 +64,7 @@
     ],
     "asar": true,
     "asarUnpack": [
-      "**/node_modules/7zip-bin/**/*"
+      "**/node_modules/node-7z-archive/binaries/**/*"
     ],
     "win": {
       "target": [
