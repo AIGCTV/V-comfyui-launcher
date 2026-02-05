@@ -1955,13 +1955,14 @@ ipcMain.handle('update-ps-plugin', async (event, { psPluginPath }) => {
     }
 
     // 获取 7za.exe 路径 - 需要处理开发环境 vs 打包环境
+    // 注意：使用的是 node-7z-archive 包，二进制文件在 binaries/win32/ 目录下
     let sevenZipPath;
     if (app.isPackaged) {
-      // 打包后，7zip-bin 在 resources/app.asar.unpacked/node_modules 下
-      sevenZipPath = path.join(process.resourcesPath, 'app.asar.unpacked', 'node_modules', '7zip-bin', 'win', 'x64', '7za.exe');
+      // 打包后，node-7z-archive 的 binaries 在 resources/app.asar.unpacked/node_modules 下
+      sevenZipPath = path.join(process.resourcesPath, 'app.asar.unpacked', 'node_modules', 'node-7z-archive', 'binaries', 'win32', '7za.exe');
     } else {
       // 开发环境，直接使用 node_modules
-      sevenZipPath = path.join(__dirname, '..', 'node_modules', '7zip-bin', 'win', 'x64', '7za.exe');
+      sevenZipPath = path.join(__dirname, '..', 'node_modules', 'node-7z-archive', 'binaries', 'win32', '7za.exe');
     }
     console.log('[PS Plugin] Using 7z path:', sevenZipPath);
 
