@@ -2,6 +2,7 @@
   "name": "comfyui-portable-launcher",
   "productName": "VLauncher",
   "version": "1.0.66",
+  "license": "GPL-3.0-only",
   "main": "electron/main.cjs",
   "type": "module",
   "scripts": {
@@ -47,7 +48,7 @@
     "appId": "com.aigctv.launcher",
     "productName": "VLauncher",
     "executableName": "VLauncher",
-    "copyright": "Copyright © 2026 AIGCTV",
+    "copyright": "Copyright (c) 2026 AIGCTV",
     "afterPack": "./scripts/afterPack.cjs",
     "directories": {
       "output": "dist-electron"
