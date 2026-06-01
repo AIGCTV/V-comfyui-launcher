@@ -102,4 +102,4 @@ npm run electron:build:portable
 ```
 
 ## 📄 License
-MIT License
+GPL-3.0
