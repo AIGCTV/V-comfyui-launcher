@@ -1,21 +1,10 @@
 {
-  "pythonPath": "",
-  "gitPath": "",
-  "customArgs": "",
-  "useGitHubProxy": false,
-  "psPluginPath": "",
-  "useGithubMirror": false,
-  "githubMirrorUrl": "https://ghproxy.net/",
-  "usePypiMirror": false,
-  "pypiMirrorUrl": "https://pypi.tuna.tsinghua.edu.cn/simple",
-  "useHfMirror": false,
-  "hfMirrorUrl": "https://hf-mirror.com",
-  "modelsPath": "",
-  "usePortablePython": true,
   "banner": "https://cdn.jsdelivr.net/gh/AIGCTV/V-comfyui-launcher@main/docs/images/banner.png",
   "announcement": {
-    "title": "欢迎使用 AIGCTV 启动器 v1.0.5",
-    "time": "2026-01-04"
+    "title": "Welcome to AIGCTV Launcher v1.0.66",
+    "title_zh": "欢迎使用 AIGCTV 启动器 v1.0.66",
+    "title_en": "Welcome to AIGCTV Launcher v1.0.66",
+    "time": "2026-02-05"
   },
   "resources": [
     {
@@ -43,7 +32,7 @@
     "viewMoreUrl": "https://www.iesdouyin.com/share/playlet/detail/7410359478745073715",
     "list": [
       {
-        "title": "PS-AI插件使用全攻略",
+        "title": "PS-AI插件使用全流程",
         "platform": "B站",
         "views": "全网200W+",
         "url": "https://space.bilibili.com/3546670109296710/lists/6277151"

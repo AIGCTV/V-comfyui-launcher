@@ -1,34 +1,77 @@
-# Ignore everything
+# Ignore everything by default so the public repo stays source-only.
 *
 
-# But not these files/folders
+# Repository metadata and docs
 !.gitignore
 !README.md
 !README_CN.md
+!SECURITY.md
+!CONTRIBUTING.md
 !LICENSE.txt
 !LICENSE.electron.txt
 
-# Include docs folder and all its contents
+# Documentation assets
 !docs/
 !docs/**
 
-# Include .agent folder for workflows
+# Agent workflow docs
 !.agent/
 !.agent/**
 
-# Include source code for development
+# Application source
 !electron/
 !electron/**
 !components/
 !components/**
 !services/
 !services/**
+!i18n/
+!i18n/**
+!public/
+!public/**
+!scripts/
+!scripts/**
 !*.tsx
 !*.ts
 !*.cjs
+!*.js
 !*.json
 !*.html
 !*.css
+generate-build-info.js
+public/*副本*
 
-# Logs (in case they appear in docs)
+# Dependency and build outputs
+node_modules/
+dist/
+dist-electron/
+
+# Packaged Electron runtime files copied into the workspace root
+chrome_*.pak
+d3dcompiler_47.dll
+ffmpeg.dll
+icudtl.dat
+libEGL.dll
+libGLESv2.dll
+resources.pak
+snapshot_blob.bin
+v8_context_snapshot.bin
+vk_swiftshader.dll
+vk_swiftshader_icd.json
+vulkan-1.dll
+LICENSES.chromium.html
+locales/
+resources/
+
+# Local/private runtime state
+.env
+.env.*
+!.env.example
+launcher-settings.json
+rh-config.json
+
+# Logs, caches, and temporary working copies
 *.log
+.cache/
+.vite/
+modified_files/
