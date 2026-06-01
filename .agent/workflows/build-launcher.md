@@ -24,7 +24,7 @@ Remove-Item -Recurse -Force dist, dist-electron -ErrorAction SilentlyContinue
 
 ### 2. 执行一键构建 (推荐)
 ```powershell
-npx electron-builder --win
+npm run electron:build
 ```
 此命令会同时：
 1. 构建前端

@@ -1,6 +1,6 @@
 
 // Config persistence
-const configPath = path.join(__dirname, '../launcher-config.json');
+const configPath = path.join(__dirname, '../launcher-settings.json');
 
 ipcMain.handle('load-settings', async () => {
     const fs = require('fs');

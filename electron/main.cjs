@@ -255,7 +255,7 @@ ipcMain.handle('start-comfy', async (event, settings, mode) => {
     // Get ComfyUI_windows_portable root directory
     const comfyDir = getComfyDir();
     const fs = require('fs');
-    const configPath = path.join(getLauncherDir(), 'launcher-config.json');
+    const configPath = path.join(getLauncherDir(), 'launcher-settings.json');
 
     // Determine Python path: empty = use portable, otherwise custom
     // Determine Python and Git paths
@@ -965,7 +965,7 @@ ipcMain.handle('open-url', async (event, url) => {
 });
 
 // Config persistence
-const configPath = path.join(getLauncherDir(), 'launcher-config.json');
+const configPath = path.join(getLauncherDir(), 'launcher-settings.json');
 
 // Default settings
 const defaultSettings = {
