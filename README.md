@@ -1,12 +1,17 @@
-# AIGCTV ComfyUI Launcher
+# V ComfyUI Launcher
 
 [English](README.md) | [中文](README_CN.md)
 
 <p align="center">
   <img src="https://img.shields.io/github/v/release/AIGCTV/V-comfyui-launcher?color=orange&label=release" />
   <img src="https://img.shields.io/github/downloads/AIGCTV/V-comfyui-launcher/total?color=blue&label=downloads" />
-  <img src="https://img.shields.io/github/license/AIGCTV/V-comfyui-launcher" />
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-GPLv3-blue.svg" alt="License"></a>
   <img src="https://img.shields.io/github/stars/AIGCTV/V-comfyui-launcher?style=social" />
+</p>
+
+<p align="center">
+  <a href="https://www.youtube.com/@aigc_tv" target="_blank"><img src="https://img.shields.io/badge/YouTube-AIGCTV-red?logo=youtube&logoColor=white" alt="YouTube"></a>
+  <a href="https://space.bilibili.com/3546670109296710" target="_blank"><img src="https://img.shields.io/badge/Bilibili-AIGCTV-FF69B4?logo=bilibili&logoColor=white" alt="Bilibili"></a>
 </p>
 
 **A ComfyUI Launcher that Understands Creators Better** — Designed to improve efficiency, simplify deployment, and enhance workflow management.
@@ -67,6 +72,8 @@ ComfyUI_windows_portable/ (Root)
 
 ## 📖 Documentation
 
+[![ComfyUI V-Launcher Tutorial](docs/images/banner2.webp)](https://www.youtube.com/watch?v=OL3lZimy85s)
+
 We provide specific operating manuals for each feature page, please refer to:
 
 👉 **[Click to View "V ComfyUI Launcher User Manual"](docs/UserGuide.md)**
@@ -77,6 +84,7 @@ The manual covers detailed content including:
 3.  **Versions**: Kernel update and rollback tutorials.
 4.  **PS Plugins**: Connection to Photoshop workflow.
 5.  **Settings**: Model sharing and advanced parameter configuration.
+6.  **Themes**：Switch between dark and light display modes.
 
 ---
 
@@ -94,4 +102,4 @@ npm run electron:build:portable
 ```
 
 ## 📄 License
-MIT License
+GPL-3.0
