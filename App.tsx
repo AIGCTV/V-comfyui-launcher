@@ -42,7 +42,7 @@ const App: React.FC = () => {
   const [localComfyVersion, setLocalComfyVersion] = useState<{ hash: string, fullHash: string, date: string }>({ hash: 'Loading...', fullHash: '', date: '' });
 
   // Launcher Version Info
-  const [launcherVersion, setLauncherVersion] = useState<{ version: string; buildDate: string }>({ version: '1.0.66', buildDate: '2026-6-1 15:00:42' });
+  const [launcherVersion, setLauncherVersion] = useState<{ version: string; buildDate: string }>({ version: '1.1.0', buildDate: '2026-6-5 10:13:14' });
 
   const addLog = useCallback((message: string, type: 'info' | 'error' | 'system' = 'info') => {
     setLogs(prev => [...prev, {
