@@ -1,0 +1,4 @@
+#!/bin/sh
+set -eu
+node scripts/security-audit.cjs source
+node scripts/security-audit.cjs history

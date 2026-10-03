@@ -12,11 +12,17 @@
     "preview": "vite preview",
     "electron": "wait-on --timeout 30000 http-get://127.0.0.1:5174/index.html && electron .",
     "electron:dev": "concurrently -k \"cross-env BROWSER=none npm run dev\" \"npm run electron\"",
-    "electron:build": "node generate-build-info.cjs && npm run build && electron-builder",
-    "electron:build:portable": "node generate-build-info.cjs && npm run build && electron-builder --win portable",
-    "electron:build:dir": "node generate-build-info.cjs && npm run build && electron-builder --win dir",
-    "electron:build:zip": "node generate-build-info.cjs && npm run build && electron-builder --win zip",
-    "release:build": "node scripts/build-release.cjs"
+    "electron:build": "npm run release:build",
+    "electron:build:portable": "npm run release:build",
+    "electron:build:dir": "npm run release:build",
+    "electron:build:zip": "npm run release:build",
+    "release:build": "node scripts/build-release.cjs",
+    "security:check": "node scripts/security-audit.cjs source",
+    "security:history": "node scripts/security-audit.cjs history",
+    "test:security": "node --test scripts/security-audit.test.cjs",
+    "security:install-hooks": "git config core.hooksPath .githooks",
+    "release:verify": "node scripts/verify-release.cjs",
+    "release:publish": "node scripts/publish-release.cjs"
   },
   "dependencies": {
     "extract-zip": "^2.0.1",
@@ -66,7 +72,20 @@
       "!node_modules/**/README*",
       "!node_modules/**/test/**",
       "!node_modules/**/*.map",
-      "build-info.json"
+      "build-info.json",
+      "!**/.env*",
+      "!**/rh-config.json",
+      "!**/launcher-settings.json",
+      "!**/*.pem",
+      "!**/*.key",
+      "!**/*.p12",
+      "!**/*.pfx",
+      "!**/*.log",
+      "!**/*.map",
+      "!**/fixtures/**",
+      "!**/testdata/**",
+      "!public/*副本*",
+      "!node_modules/when/scripts/**"
     ],
     "asar": true,
     "asarUnpack": [
@@ -95,6 +114,7 @@
     },
     "portable": {
       "artifactName": "V_comfyui_launcher_${version}.${ext}"
-    }
+    },
+    "beforePack": "./scripts/beforePack.cjs"
   }
 }

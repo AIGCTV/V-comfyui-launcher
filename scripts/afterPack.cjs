@@ -3,6 +3,9 @@ const { execFileSync } = require('child_process');
 const fs = require('fs');
 
 exports.default = async function (context) {
+    // All electron-builder entry points must audit the actual ASAR and unpacked files.
+    const { scanDirectory, assertClean } = require('./security-audit.cjs');
+    assertClean(scanDirectory(context.appOutDir));
     if (context.electronPlatformName !== 'win32') return;
 
     const exePath = path.join(context.appOutDir, 'VLauncher.exe');

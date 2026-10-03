@@ -2,6 +2,8 @@
 
 ## Supported Versions / 支持版本
 
+See [2026-10-03 remediation and release checks](docs/SecurityRemediation_20261003.md). Run `npm run security:install-hooks` in every new clone. Local pre-commit/pre-push scans must pass before uploading; GitHub checks are additional protection.
+
 Security fixes are handled on the latest `main` branch and the latest public release.
 
 安全修复会优先应用到最新的 `main` 分支和最新公开发布版本。

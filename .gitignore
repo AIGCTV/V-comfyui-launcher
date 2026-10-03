@@ -3,6 +3,11 @@
 
 # Repository metadata and docs
 !.gitignore
+!.gitattributes
+!.github/
+!.github/**
+!.githooks/
+!.githooks/**
 !README.md
 !README_CN.md
 !SECURITY.md
@@ -71,6 +76,15 @@ resources/
 !.env.example
 launcher-settings.json
 rh-config.json
+**/rh-config.json
+**/launcher-settings.json
+**/.env
+**/.env.*
+!/.env.example
+*.pem
+*.key
+*.p12
+*.pfx
 
 # Logs, caches, and temporary working copies
 *.log

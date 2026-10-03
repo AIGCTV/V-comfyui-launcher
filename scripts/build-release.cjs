@@ -6,7 +6,12 @@ const path = require('path');
 const { execFileSync } = require('child_process');
 
 const root = path.resolve(__dirname, '..');
+const { scanSource, scanHistory, scanDirectory, assertClean } = require('./security-audit.cjs');
+assertClean(scanSource());
+assertClean(scanHistory());
 const pkg = JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 'utf8'));
+const { git, sourceSnapshot, assertNewVersion } = require('./release-policy.cjs');
+assertNewVersion(pkg.version, git(['tag', '--list']).trim().split('\n'));
 const date = new Intl.DateTimeFormat('en-CA', {
     timeZone: 'Asia/Taipei', year: 'numeric', month: '2-digit', day: '2-digit'
 }).format(new Date()).replaceAll('-', '');
@@ -46,7 +51,8 @@ const configFile = path.join(staging, 'electron-builder.json');
 fs.writeFileSync(configFile, JSON.stringify(config, null, 2) + '\n', 'utf8');
 fs.writeFileSync(path.join(staging, 'release-manifest.json'), JSON.stringify({
     version: pkg.version, date, timezone: 'Asia/Taipei', platform: 'windows', arch: 'x64',
-    output, frontend, allowed: config.files, extraFiles: config.extraFiles,
+    allowed: ['dist/', 'electron/', 'public/', 'production node_modules/', 'package.json', 'build-info.json'],
+    extraFiles: config.extraFiles,
     excluded: ['.env*', 'launcher-settings.json', 'rh-config.json', '.git', '.cache',
         'scripts', 'test fixtures', 'logs', 'ComfyUI', 'models', 'user data'],
     emptyData: 'No user settings, credentials, installed PS nodes or ComfyUI data are bundled.',
@@ -57,8 +63,10 @@ fs.writeFileSync(path.join(staging, 'release-manifest.json'), JSON.stringify({
 }, null, 2) + '\n', 'utf8');
 
 node('generate-build-info.cjs');
+const builtSourceSnapshot = sourceSnapshot();
 node('node_modules/typescript/bin/tsc');
 node('node_modules/vite/bin/vite.js', ['build', '--outDir', frontend, '--emptyOutDir', 'false']);
+assertClean(scanDirectory(frontend));
 node('node_modules/electron-builder/cli.js', ['--win', 'portable', 'dir', '--x64',
     '--publish', 'never', '--config', configFile]);
 
@@ -69,4 +77,9 @@ execFileSync('powershell.exe', ['-NoProfile', '-Command',
     `Compress-Archive -Path ${psQuote(path.join(output, 'win-unpacked', '*'))} -DestinationPath ${psQuote(zip)}`
 ], { cwd: root, stdio: 'inherit', windowsHide: true });
 fs.copyFileSync(path.join(staging, 'release-manifest.json'), path.join(output, 'release-manifest.json'));
+const finalManifest = JSON.parse(fs.readFileSync(path.join(output, 'release-manifest.json'), 'utf8'));
+if (sourceSnapshot() !== builtSourceSnapshot) throw new Error('Source changed during build; do not publish these artifacts');
+finalManifest.sourceSnapshot = builtSourceSnapshot;
+fs.writeFileSync(path.join(output, 'release-manifest.json'), JSON.stringify(finalManifest, null, 2) + '\n', 'utf8');
+require('./verify-release.cjs').verifyRelease(output);
 console.log('RELEASE_OUTPUT=' + output);
