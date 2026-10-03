@@ -13,29 +13,23 @@
   <a href="https://space.bilibili.com/3546670109296710" target="_blank"><img src="https://img.shields.io/badge/Bilibili-AIGCTV-FF69B4?logo=bilibili&logoColor=white" alt="Bilibili"></a>
 </p>
 
-**面向创作者的 ComfyUI 启动器**：支持一键启动、可视化版本管理、RunningHub 工作流转换、模型共享，以及面向 Photoshop 工作流的 ComfyUI 辅助能力。
+**面向创作者的 ComfyUI 启动器**：支持一键启动、可视化版本管理、模型共享，以及面向 Photoshop 工作流的 ComfyUI 辅助能力。
 
 ## 核心亮点
 
-### 1. RunningHub 工作流转换
-
-- 将支持的 RunningHub 图像应用转换为本地 ComfyUI 兼容的工作流 JSON。
-- 在启动器中追踪云端任务状态和账户余额。
-- 让生成的工作流服务于 Photoshop 相关的 ComfyUI 工作流。
-
-### 2. 可视化 Git 版本管理
+### 1. 可视化 Git 版本管理
 
 - 在界面中浏览 Stable 和 Dev 分支历史。
 - 不需要手动输入 Git 命令即可切换 ComfyUI 版本。
 - 网络较慢时可启用 GitHub 镜像/代理选项。
 
-### 3. 便携环境管理
+### 2. 便携环境管理
 
 - 默认使用整合包内置 Python/Git。
 - 支持指定本机 Python 或 Git 路径。
 - 可在启动页切换 CPU/GPU 运行模式。
 
-### 4. 模型共享
+### 3. 模型共享
 
 - 为多个 ComfyUI 整合包创建模型目录软链接。
 - 减少重复下载和磁盘占用。
@@ -80,9 +74,8 @@ ComfyUI_windows_portable/
 1. 启动：基础运行和快捷目录。
 2. 控制台：日志查看和依赖安装。
 3. 版本：ComfyUI 更新和回退。
-4. PS 插件：Photoshop 工作流集成。
-5. 设置：模型共享和高级配置。
-6. 主题：深色和浅色模式。
+4. 设置：模型共享和高级配置。
+5. 主题：深色和浅色模式。
 
 ## 构建与开发
 

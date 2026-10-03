@@ -1,10 +1,10 @@
 {
   "banner": "https://cdn.jsdelivr.net/gh/AIGCTV/V-comfyui-launcher@main/docs/images/banner1.webp",
   "announcement": {
-    "title": "VLauncher v1.0.66 released. AIGCTV website is live: aigctv.net",
-    "title_zh": "V启动器 v1.0.66 发布！AIGCTV 官网已上线：aigctv.net",
-    "title_en": "VLauncher v1.0.66 released. AIGCTV website is live: aigctv.net",
-    "time": "2026-06-01"
+    "title": "AIGCTV自研PS插件发布，官网ps.aigctv.net",
+    "title_zh": "AIGCTV自研PS插件发布，官网ps.aigctv.net",
+    "title_en": "AIGCTV Photoshop plugin released. Official website: ps.aigctv.net",
+    "time": "2026-10-03"
   },
   "resources": [
     {

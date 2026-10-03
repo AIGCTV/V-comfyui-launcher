@@ -6,8 +6,8 @@ export default defineConfig({
   plugins: [react()],
   base: './', // Crucial for Electron: ensures assets are loaded relatively
   server: {
-    port: 5173,
-    host: true, // Bind to all interfaces (0.0.0.0) to ensure accessibility
+    port: 5174, // Keep separate from the Vplugins development server on 5173
+    host: '127.0.0.1', // Match Electron exactly; avoid IPv4/IPv6 localhost ambiguity
     strictPort: true, // Fail if port is already in use
     open: false // Electron opens the window, not Vite
   },

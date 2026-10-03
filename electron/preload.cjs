@@ -13,21 +13,17 @@ contextBridge.exposeInMainWorld('electronAPI', {
     loadSettings: () => ipcRenderer.invoke('load-settings'),
     saveSettings: (settings) => ipcRenderer.invoke('save-settings', settings),
     getLauncherVersion: () => ipcRenderer.invoke('get-launcher-version'),
-    // RunningHub API
-    generateRHWorkflow: (config) => ipcRenderer.invoke('generate-rh-workflow', config),
-    saveRHWorkflow: (workflow, filename) => ipcRenderer.invoke('save-rh-workflow', workflow, filename),
-    loadRHConfig: () => ipcRenderer.invoke('load-rh-config'),
-    saveRHConfig: (config) => ipcRenderer.invoke('save-rh-config', config),
-    getRHAccountStatus: (apiKey) => ipcRenderer.invoke('get-rh-account-status', apiKey),
-    cancelRHTask: (apiKey, taskId) => ipcRenderer.invoke('cancel-rh-task', apiKey, taskId),
-    getRHTaskStatus: (apiKey, taskId) => ipcRenderer.invoke('get-rh-task-status', apiKey, taskId),
-    getRHTaskOutputs: (apiKey, taskId) => ipcRenderer.invoke('get-rh-task-outputs', apiKey, taskId),
-    onRHTaskDetected: (callback) => ipcRenderer.on('rh-task-detected', callback),
-    removeRHTaskListener: (callback) => ipcRenderer.removeListener('rh-task-detected', callback),
     onLog: (callback) => ipcRenderer.on('log', callback),
     removeLogListener: (callback) => ipcRenderer.removeListener('log', callback),
-    // PS Plugin Auto-Update
-    updatePSPlugin: (paths) => ipcRenderer.invoke('update-ps-plugin', paths),
+    // PS Bridge node installation
+    getPSBridgeStatus: () => ipcRenderer.invoke('get-ps-bridge-status'),
+    updatePSBridge: () => ipcRenderer.invoke('update-ps-bridge'),
+    openPSBridgeDirectory: () => ipcRenderer.invoke('open-ps-bridge-directory'),
+    onPSBridgeProgress: (callback) => {
+        const listener = (_event, progress) => callback(progress);
+        ipcRenderer.on('ps-bridge-progress', listener);
+        return () => ipcRenderer.removeListener('ps-bridge-progress', listener);
+    },
 
     // Window Controls
     minimizeWindow: () => ipcRenderer.invoke('minimize-window'),

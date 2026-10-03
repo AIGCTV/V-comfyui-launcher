@@ -1,20 +1,22 @@
 {
   "name": "comfyui-portable-launcher",
   "productName": "VLauncher",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "license": "GPL-3.0-only",
   "main": "electron/main.cjs",
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "test:ps-bridge": "node --test scripts/ps-bridge-service.test.cjs",
     "build": "node generate-build-info.cjs && tsc && vite build",
     "preview": "vite preview",
-    "electron": "wait-on tcp:5173 && electron .",
+    "electron": "wait-on --timeout 30000 http-get://127.0.0.1:5174/index.html && electron .",
     "electron:dev": "concurrently -k \"cross-env BROWSER=none npm run dev\" \"npm run electron\"",
     "electron:build": "node generate-build-info.cjs && npm run build && electron-builder",
     "electron:build:portable": "node generate-build-info.cjs && npm run build && electron-builder --win portable",
     "electron:build:dir": "node generate-build-info.cjs && npm run build && electron-builder --win dir",
-    "electron:build:zip": "node generate-build-info.cjs && npm run build && electron-builder --win zip"
+    "electron:build:zip": "node generate-build-info.cjs && npm run build && electron-builder --win zip",
+    "release:build": "node scripts/build-release.cjs"
   },
   "dependencies": {
     "extract-zip": "^2.0.1",
@@ -22,7 +24,8 @@
     "node-7z-archive": "^1.1.7",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-window": "^2.2.3"
+    "react-window": "^2.2.3",
+    "yauzl": "^2.10.0"
   },
   "devDependencies": {
     "@types/react": "^18.2.15",
@@ -67,7 +70,8 @@
     ],
     "asar": true,
     "asarUnpack": [
-      "**/node_modules/node-7z-archive/binaries/**/*"
+      "**/node_modules/node-7z-archive/binaries/**/*",
+      "**/electron/ps-bridge-probe.py"
     ],
     "win": {
       "target": [

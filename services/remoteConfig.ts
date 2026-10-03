@@ -11,7 +11,7 @@ export const CONFIG_URL = 'https://cdn.jsdelivr.net/gh/AIGCTV/V-comfyui-launcher
 const CACHE_KEY = 'launcher_config';
 const CACHE_TIME_KEY = 'launcher_config_time';
 const CACHE_VERSION_KEY = 'launcher_config_version';
-const CURRENT_CACHE_VERSION = '3';
+const CURRENT_CACHE_VERSION = '4';
 const FETCH_TIMEOUT = 8000;
 
 export interface ResourceConfig {
@@ -72,10 +72,10 @@ export const DEFAULT_TUTORIALS: TutorialsConfig = {
 export const DEFAULT_CONFIG: LauncherConfig = {
     banner: 'banner.png',
     announcement: {
-        title: 'Welcome to AIGCTV Launcher',
-        title_zh: '欢迎使用 AIGCTV 启动器',
-        title_en: 'Welcome to AIGCTV Launcher',
-        time: '2025-12-17',
+        title: 'AIGCTV自研PS插件发布，官网ps.aigctv.net',
+        title_zh: 'AIGCTV自研PS插件发布，官网ps.aigctv.net',
+        title_en: 'AIGCTV Photoshop plugin released. Official website: ps.aigctv.net',
+        time: '2026-10-03',
     },
     resources: DEFAULT_RESOURCES,
     tutorials: DEFAULT_TUTORIALS,

@@ -34,6 +34,6 @@ Never commit API keys, RunningHub credentials, local filesystem paths, private c
 
 ## Secure Defaults / 安全默认值
 
-The launcher stores local user settings in `launcher-settings.json` and RunningHub settings in `rh-config.json`. Both files are ignored by Git. Public remote launcher content belongs in `launcher-config.json`.
+The launcher stores local user settings in `launcher-settings.json`. Legacy `rh-config.json` files remain ignored by Git after removal of the RunningHub page. Public remote launcher content belongs in `launcher-config.json`.
 
-启动器会把本地用户设置保存在 `launcher-settings.json`，把 RunningHub 设置保存在 `rh-config.json`。这两个文件都被 Git 忽略。公开远程启动器内容应放在 `launcher-config.json`。
+启动器会把本地用户设置保存在 `launcher-settings.json`。RunningHub 页面移除后，旧的 `rh-config.json` 仍被 Git 忽略。公开远程启动器内容应放在 `launcher-config.json`。

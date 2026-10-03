@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { AppSettings } from '../types';
-import { Folder, Link, RefreshCw, Loader2 } from 'lucide-react';
+import { Folder, Link } from 'lucide-react';
 import { useTranslation } from '../i18n';
+import { PSBridgeSettings } from './PSBridgeSettings';
 
 interface SettingsProps {
     settings: AppSettings;
@@ -50,46 +51,6 @@ export const Settings: React.FC<SettingsProps> = ({ settings, onSave }) => {
             alert(t('settings.messages.demoSelectDir'));
         }
     };
-
-    // PS Plugin Auto-Update State
-    const [isUpdatingPlugin, setIsUpdatingPlugin] = useState(false);
-    const [updateStatus, setUpdateStatus] = useState<string>('');
-
-    const handlePSPluginUpdate = async () => {
-        if (!formData.psPluginPath) {
-            setUpdateStatus(t('settings.messages.setPsPluginDirFirst'));
-            setTimeout(() => setUpdateStatus(''), 5000);
-            return;
-        }
-
-        if (window.electronAPI?.updatePSPlugin) {
-            setIsUpdatingPlugin(true);
-            setUpdateStatus(t('settings.messages.downloadingUpdate'));
-            try {
-                const result = await window.electronAPI.updatePSPlugin({
-                    psPluginPath: formData.psPluginPath
-                });
-
-                if (result.success) {
-                    setUpdateStatus(t('settings.messages.pluginUpdateSuccess'));
-                    setTimeout(() => setUpdateStatus(''), 3000);
-                } else {
-                    setUpdateStatus('✗ ' + (result.message || t('settings.messages.updateFailed')));
-                    setTimeout(() => setUpdateStatus(''), 5000);
-                }
-            } catch (error) {
-                console.error('[PS Plugin] Update error:', error);
-                setUpdateStatus(t('settings.messages.updateError'));
-                setTimeout(() => setUpdateStatus(''), 5000);
-            } finally {
-                setIsUpdatingPlugin(false);
-            }
-        } else {
-            setUpdateStatus(t('settings.messages.electronRequired'));
-            setTimeout(() => setUpdateStatus(''), 5000);
-        }
-    };
-
 
     const handleCreateSymlink = async () => {
         if (!formData.modelsPath) {
@@ -414,64 +375,7 @@ export const Settings: React.FC<SettingsProps> = ({ settings, onSave }) => {
                     </div>
                 </section>
 
-                {/* SECTION 5: PS PLUGIN SETTINGS */}
-                <section>
-                    <div className="flex items-center gap-4 mb-5">
-                        <div className="h-7 w-1.5 bg-cyan-500 rounded-full shadow-[0_0_10px_rgba(6,182,212,0.5)]"></div>
-                        <h1 className="text-xl font-bold text-white tracking-wide">
-                            {t('settings.psPluginSettings')}
-                        </h1>
-                        <div className="h-px bg-gray-800 flex-1 ml-4" />
-                    </div>
-
-                    <div className="space-y-4 pl-1">
-                        {/* Photoshop Plugin Path */}
-                        <div className={cardClass}>
-                            <div className={`${iconWrapperClass} bg-cyan-600/20 text-cyan-400`}>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                    <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
-                                </svg>
-                            </div>
-                            <div className={labelWrapperClass}>
-                                <div className="text-white font-medium text-sm">{t('settings.psPluginDir')}</div>
-                                <div className="text-gray-500 text-xs">{t('settings.psPluginDesc')}</div>
-                            </div>
-                            <div className={inputWrapperClass}>
-                                <input
-                                    type="text"
-                                    value={formData.psPluginPath || ''}
-                                    onChange={(e) => handleChange('psPluginPath', e.target.value)}
-                                    className="flex-1 bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-gray-200 focus:outline-none focus:border-purple-500 text-sm"
-                                    placeholder=""
-                                    disabled={false}
-                                />
-                                <button
-                                    type="button"
-                                    onClick={handlePSPluginUpdate}
-                                    disabled={isUpdatingPlugin}
-                                    className="px-2.5 bg-blue-600 rounded-lg text-white border border-blue-500 hover:bg-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
-                                    title={t('settings.updatePlugin')}
-                                >
-                                    {isUpdatingPlugin ? <Loader2 size={16} className="animate-spin" /> : <RefreshCw size={16} />}
-                                </button>
-                                <button
-                                    type="button"
-                                    onClick={() => handleSelectDir('psPluginPath')}
-                                    className="px-2.5 bg-gray-700 rounded-lg text-gray-300 border border-gray-600 hover:bg-gray-600"
-                                >
-                                    <Folder size={16} />
-                                </button>
-                            </div>
-                        </div>
-
-                        {/* Update Status */}
-                        {updateStatus && (
-                            <div className="text-sm text-center text-cyan-400 bg-cyan-900/20 rounded-lg py-2 px-4 border border-cyan-700/50">
-                                {updateStatus}
-                            </div>
-                        )}
-                    </div>
-                </section>
+                <PSBridgeSettings settings={formData} />
             </div>
 
 

@@ -9,10 +9,9 @@
 1.  [▶️ 启动 (Dashboard)](#1-启动-dashboard)
 2.  [🖥️ 控制台 (Console)](#2-控制台-console)
 3.  [📚 版本 (Versions)](#3-版本-versions)
-4.  [✨ PS插件 (PS Plugins)](#4-ps插件-ps-plugins)
-5.  [⚙️ 设置 (Settings)](#5-设置-settings)
-6.  [📖 教程 (Tutorials)](#6-教程-tutorials)
-7.  [🌓 主题切换 (Themes)](#7-主题切换-themes)
+4.  [⚙️ 设置 (Settings)](#4-设置-settings)
+5.  [📖 教程 (Tutorials)](#5-教程-tutorials)
+6.  [🌓 主题切换 (Themes)](#6-主题切换-themes)
 
 ---
 
@@ -75,29 +74,7 @@
 
 ---
 
-## 4. ✨ PS插件 (PS Plugins)
-专为 Photoshop 工作流用户设计的功能，可以把RunningHub任意AI应用（图像）一键转换成PS插件，直接在Photoshop中调用。
-
-### 核心功能
-*   **RunningHub 集成**:
-    *   **API Key**: 输入 RunningHub 的密钥。
-    *   **Workflow ID**: 输入 RunningHub 上的工作流 ID。
-    *   **生成工作流**: 点击按钮，自动将在线工作流转换为本地 ComfyUI 兼容的 JSON 文件。
-*   **任务监控**: 自动追踪云端任务状态，显示排队、运行进度。
-*   **账户信息**: 显示 RH 币余额。
-
-### 操作示范
-1.  填入 API Key 和 Workflow ID。
-2.  点击"生成工作流"。
-3.  等待提示成功，生成的 `.json` 文件会自动保存到默认工作流目录。
-4.  复制文件路径或直接点击"打开文件夹"查看。
-
-> ![工作流生成界面](images/ps_plugins1.png)
-> ![任务状态监控](images/ps_plugins2.png)
-
----
-
-## 5. ⚙️ 设置 (Settings)
+## 4. ⚙️ 设置 (Settings)
 全局配置与环境管理。
 
 ### 核心功能
@@ -108,14 +85,16 @@
     *   输入自定义命令，如 `--enable-manager` (启用节点管理器)、 `--port 8888` (修改端口)、`--preview-method auto` (预览模式)。
 *   **环境覆盖**:
     *   如果你不想使用便携包自带的环境，可以在这里指定本机安装的 `Python.exe` 和 `Git.exe` 路径。
-*   **PS 插件路径**:
-    *   设置 Photoshop 插件安装目录，支持一键更新插件文件。
+*   **PS 节点安装与更新**:
+    *   自动识别当前 ComfyUI 的节点目录，安装或更新 ComfyUI PS Bridge Nodes 的公开 main 最新提交。
+    *   先关闭 ComfyUI；若检测到旧 PS 节点，请手动将所列目录移出 custom_nodes 后重新检查。
+    *   安装成功后重启 ComfyUI，并按 Ctrl+F5 刷新浏览器。详见 [安装说明](PSBridgeInstallation.md)。
 
 > ![设置页面截图](images/settings.png)
 
 ---
 
-## 6. 📖 教程 (Tutorials)
+## 5. 📖 教程 (Tutorials)
 内置AIGCTV的视频教程、资源分享、精彩合集等，一键直达。
 
 *   包含常见问题解答、快捷键说明及相关教程链接。
@@ -124,7 +103,7 @@
 
 ---
 
-## 7. 🌓 主题切换 (Themes)
+## 6. 🌓 主题切换 (Themes)
 支持深色 (Dark) 与浅色 (Light) 模式切换，满足不同创作环境的需求。
 
 ### 核心功能

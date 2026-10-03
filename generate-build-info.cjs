@@ -8,14 +8,15 @@ const packageJson = JSON.parse(fs.readFileSync(path.join(__dirname, 'package.jso
 // Generate build info
 const buildInfo = {
     version: packageJson.version,
-    buildDate: new Date().toLocaleString('zh-CN', { hour12: false }).replace(/\//g, '-'),
+    buildDate: new Date().toLocaleString('zh-CN', { hour12: false, timeZone: 'Asia/Taipei' }).replace(/\//g, '-'),
     buildTimestamp: Date.now()
 };
 
 // Write to build-info.json
 fs.writeFileSync(
     path.join(__dirname, 'build-info.json'),
-    JSON.stringify(buildInfo, null, 2)
+    JSON.stringify(buildInfo, null, 2) + '\n',
+    'utf8'
 );
 
 console.log('✅ Build info generated:', buildInfo);

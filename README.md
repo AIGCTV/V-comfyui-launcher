@@ -13,29 +13,23 @@
   <a href="https://space.bilibili.com/3546670109296710" target="_blank"><img src="https://img.shields.io/badge/Bilibili-AIGCTV-FF69B4?logo=bilibili&logoColor=white" alt="Bilibili"></a>
 </p>
 
-**A ComfyUI launcher built for creators**: one-click startup, visual version management, RunningHub workflow conversion, model sharing, and Photoshop workflow support for ComfyUI portable packages.
+**A ComfyUI launcher built for creators**: one-click startup, visual version management, model sharing, and Photoshop workflow support for ComfyUI portable packages.
 
 ## Highlights
 
-### 1. RunningHub workflow conversion
-
-- Convert supported RunningHub image apps into local ComfyUI-compatible workflow JSON.
-- Track cloud task status and account balance from the launcher.
-- Use generated workflows in Photoshop-oriented ComfyUI workflows.
-
-### 2. Visual Git version management
+### 1. Visual Git version management
 
 - Browse Stable and Dev branch histories from the UI.
 - Switch ComfyUI versions without typing Git commands.
 - Use a GitHub mirror/proxy option when network access is slow.
 
-### 3. Portable environment management
+### 2. Portable environment management
 
 - Use bundled Python/Git by default.
 - Override Python or Git paths when you need a custom local environment.
 - Switch CPU/GPU launch modes from the dashboard.
 
-### 4. Model sharing
+### 3. Model sharing
 
 - Create model-directory symlinks for multiple ComfyUI portable packages.
 - Reduce duplicated model downloads and disk usage.
@@ -80,9 +74,8 @@ The manual covers:
 1. Dashboard: basic operation and directory shortcuts.
 2. Console: logs and dependency installation.
 3. Versions: ComfyUI update and rollback.
-4. PS Plugins: Photoshop workflow integration.
-5. Settings: model sharing and advanced configuration.
-6. Themes: dark and light mode.
+4. Settings: model sharing and advanced configuration.
+5. Themes: dark and light mode.
 
 ## Build and Development
 

@@ -1,13 +1,13 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import { Play, Terminal, Layers, Settings as SettingsIcon, BookOpen, Sparkles, Sun, Moon, Globe } from 'lucide-react';
+import { Play, Terminal, Layers, Settings as SettingsIcon, BookOpen, Sun, Moon, Globe } from 'lucide-react';
 import { useTheme } from './ThemeContext';
 import { useTranslation } from './i18n';
+import buildInfo from './build-info.json';
 import { Dashboard } from './components/Dashboard';
 import { Versions } from './components/Versions';
 import { Settings } from './components/Settings';
 import { About } from './components/About';
 import { Console } from './components/Console';
-import { RunningHub } from './components/RunningHub';
 import { AppStatus, RunMode, LogEntry, AppSettings, TabView, VersionInfo } from './types';
 
 // Default settings - empty paths mean use portable environment
@@ -42,7 +42,7 @@ const App: React.FC = () => {
   const [localComfyVersion, setLocalComfyVersion] = useState<{ hash: string, fullHash: string, date: string }>({ hash: 'Loading...', fullHash: '', date: '' });
 
   // Launcher Version Info
-  const [launcherVersion, setLauncherVersion] = useState<{ version: string; buildDate: string }>({ version: '1.1.0', buildDate: '2026-6-5 10:13:14' });
+  const [launcherVersion, setLauncherVersion] = useState<{ version: string; buildDate: string }>(buildInfo);
 
   const addLog = useCallback((message: string, type: 'info' | 'error' | 'system' = 'info') => {
     setLogs(prev => [...prev, {
@@ -318,8 +318,6 @@ const App: React.FC = () => {
             localVersion={localComfyVersion}
           />
         );
-      case 'runninghub':
-        return <RunningHub />;
       case 'settings':
         return <Settings settings={settings} onSave={(s) => {
           setSettings(s);
@@ -397,12 +395,6 @@ const App: React.FC = () => {
             label={t('sidebar.versionsShort')}
             active={currentTab === 'versions'}
             onClick={() => setCurrentTab('versions')}
-          />
-          <NavItem
-            icon={<Sparkles size={20} />}
-            label={t('sidebar.runninghub')}
-            active={currentTab === 'runninghub'}
-            onClick={() => setCurrentTab('runninghub')}
           />
           <NavItem
             icon={<SettingsIcon size={20} />}

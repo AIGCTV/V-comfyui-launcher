@@ -41,24 +41,38 @@ export interface AppSettings {
   useHfMirror: boolean;
   hfMirrorUrl: string;
   modelsPath?: string;  // Shared models directory path
-  psPluginPath?: string; // Photoshop plugins directory path
+  psPluginPath?: string; // Legacy value retained for compatibility; not used by PS Bridge.
 }
 
-export type TabView = 'dashboard' | 'console' | 'versions' | 'runninghub' | 'settings' | 'about';
+export type TabView = 'dashboard' | 'console' | 'versions' | 'settings' | 'about';
 
-// RunningHub API Configuration
-export interface RunningHubConfig {
-  apiKey: string;
-  webappId: string;
-  baseUrl?: string; // Default: https://www.runninghub.cn
+export interface PSBridgeProgress {
+  stage: 'checking' | 'resolving' | 'downloading' | 'extracting' | 'dependencies' | 'validating' | 'installing' | 'complete' | 'failed';
+  percent?: number;
 }
 
-// RunningHub workflow generation result
-export interface WorkflowGenerationResult {
+export interface PSBridgeResult {
   success: boolean;
-  workflow?: any;
-  message: string;
-  savedPath?: string;
+  code: string;
+  message?: string;
+  version?: string;
+  commit?: string;
+  restartRequired?: boolean;
+  backupPath?: string;
+  retainedPath?: string;
+}
+
+export interface PSBridgeStatus {
+  state: 'notInstalled' | 'installed' | 'blocked' | 'busy';
+  code: string;
+  canUpdate: boolean;
+  installPath: string;
+  repositoryUrl: string;
+  version?: string;
+  commit?: string;
+  message?: string;
+  progress?: PSBridgeProgress;
+  lastResult?: PSBridgeResult;
 }
 
 // Define the interface for the Electron API exposed via contextBridge
@@ -77,21 +91,13 @@ declare global {
       loadSettings: () => Promise<AppSettings | null>;
       saveSettings: (settings: AppSettings) => Promise<boolean>;
       getLauncherVersion: () => Promise<{ version: string; buildDate: string }>;
-      // RunningHub API
-      generateRHWorkflow: (config: RunningHubConfig) => Promise<WorkflowGenerationResult>;
-      saveRHWorkflow: (workflow: any, filename: string) => Promise<{ success: boolean; path?: string; message: string }>;
-      loadRHConfig: () => Promise<RunningHubConfig | null>;
-      saveRHConfig: (config: RunningHubConfig) => Promise<boolean>;
-      getRHAccountStatus: (apiKey: string) => Promise<{ success: boolean; data?: { remainCoins: string; currentTaskCounts: string; remainMoney: string; currency: string; apiType: string }; message?: string }>;
-      cancelRHTask: (apiKey: string, taskId: string) => Promise<{ success: boolean; message?: string }>;
-      getRHTaskStatus: (apiKey: string, taskId: string) => Promise<{ success: boolean; code?: number; msg?: string; data?: string; message?: string }>;
-      getRHTaskOutputs: (apiKey: string, taskId: string) => Promise<{ success: boolean; data?: Array<{ fileUrl: string; fileType: string; taskCostTime: string; nodeId: string; consumeCoins: string }>; message?: string }>;
-      onRHTaskDetected: (callback: (event: any, taskId: string) => void) => void;
-      removeRHTaskListener: (callback: (event: any, taskId: string) => void) => void;
       onLog: (callback: (event: any, log: { message: string, type: 'info' | 'error' | 'system' }) => void) => void;
       removeLogListener: (callback: (event: any, log: { message: string, type: 'info' | 'error' | 'system' }) => void) => void;
-      // PS Plugin Auto-Update
-      updatePSPlugin: (paths: { psPluginPath: string }) => Promise<{ success: boolean; message?: string }>;
+      // PS Bridge node installation
+      getPSBridgeStatus: () => Promise<PSBridgeStatus>;
+      updatePSBridge: () => Promise<PSBridgeResult>;
+      openPSBridgeDirectory: () => Promise<{ success: boolean; message?: string }>;
+      onPSBridgeProgress: (callback: (progress: PSBridgeProgress) => void) => () => void;
 
       // Window controls
       minimizeWindow: () => Promise<void>;

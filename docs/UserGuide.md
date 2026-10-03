@@ -9,10 +9,9 @@ This manual follows the order of the sidebar in the launcher, providing a detail
 1.  [▶️ Dashboard](#1-dashboard)
 2.  [🖥️ Console](#2-console)
 3.  [📚 Versions](#3-versions)
-4.  [✨ PS Plugins](#4-ps-plugins)
-5.  [⚙️ Settings](#5-settings)
-6.  [📖 Tutorials](#6-tutorials)
-7.  [🌓 Themes](#7-themes)
+4.  [⚙️ Settings](#4-settings)
+5.  [📖 Tutorials](#5-tutorials)
+6.  [🌓 Themes](#6-themes)
 
 ---
 
@@ -75,29 +74,7 @@ Manage ComfyUI kernel versions, supporting updates and rollbacks.
 
 ---
 
-## 4. ✨ PS Plugins
-A feature designed for Photoshop workflow users, converting any RunningHub AI application (image) into a PS plugin with one click.
-
-### Core Features
-*   **RunningHub Integration**:
-    *   **API Key**: Enter your RunningHub key.
-    *   **Workflow ID**: Enter the Workflow ID from RunningHub.
-    *   **Generate Workflow**: Click the button to automatically convert the online workflow into a local ComfyUI-compatible JSON file.
-*   **Task Monitoring**: Automatically tracks cloud task status, displaying queue and running progress.
-*   **Account Info**: Displays your RH Coin balance.
-
-### Operation Demo
-1.  Enter API Key and Workflow ID.
-2.  Click "Generate Workflow".
-3.  Wait for the success prompt; the generated `.json` file will be saved to the default workflow directory.
-4.  Copy the file path or click "Open Folder" to view.
-
-> ![Workflow Generation Interface](images/ps_plugins1.png)
-> ![Task Status Monitoring](images/ps_plugins2.png)
-
----
-
-## 5. ⚙️ Settings
+## 4. ⚙️ Settings
 Global configuration and environment management.
 
 ### Core Features
@@ -108,14 +85,16 @@ Global configuration and environment management.
     *   Enter custom commands, such as `--enable-manager` (enable manager), `--port 8888` (change port), `--preview-method auto` (preview mode).
 *   **Environment Override**:
     *   If you prefer not to use the portable package's built-in environment, you can specify the paths to your local `Python.exe` and `Git.exe` here.
-*   **PS Plugin Path**:
-    *   Set the Photoshop plugin installation directory, supporting one-click updates for plugin files.
+*   **PS node installation and updates**:
+    *   Automatically detect the current ComfyUI node directory and install the latest public main commit of ComfyUI PS Bridge Nodes.
+    *   Stop ComfyUI first. If old PS nodes are detected, move the listed folders out of custom_nodes manually and check again.
+    *   Restart ComfyUI and refresh the browser with Ctrl+F5 after installation. See the [installation guide](PSBridgeInstallation.md).
 
 > ![Settings Screenshot](images/settings.png)
 
 ---
 
-## 6. 📖 Tutorials
+## 5. 📖 Tutorials
 One-click access to AIGCTV video tutorials, resource sharing, and best-of collections.
 
 *   Includes FAQs, shortcut keys explanations, and relevant tutorial links.
@@ -124,7 +103,7 @@ One-click access to AIGCTV video tutorials, resource sharing, and best-of collec
 
 ---
 
-## 7. 🌓 Themes
+## 6. 🌓 Themes
 Supports Dark and Light mode switching to meet requirements for different creative environments.
 
 ### Core Features

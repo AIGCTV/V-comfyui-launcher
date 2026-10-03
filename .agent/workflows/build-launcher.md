@@ -1,77 +1,39 @@
 ---
-description: 打包启动器（单文件exe + unpacked zip），自动修复图标和版本信息
+description: 打包启动器（单文件 EXE + 解压版 ZIP），设置图标和 Windows 版本元数据，保留旧产物
 ---
 
 # 打包启动器
 
-> **新特性**：现在集成了 `afterPack` 钩子，打包过程中会自动修复图标和版本元数据。
-
 ## 前置准备
 
-1. 确保 `package.json` 中的版本号已更新
-2. 确保 `App.tsx` 中的 `launcherVersion` 已更新
+1. 确认发布版本，更新 package.json 和 package-lock.json。
+2. 主页版本使用 generate-build-info.cjs 生成的 build-info.json。
+3. 检查公告及离线默认配置；确认本次包含的项目改动。
 
-## 打包步骤
+## 构建
 
-用户只需说：**"打包 v1.0.x"**（替换 x 为版本号）
+执行：
 
-// turbo-all
-
-### 1. 清理旧的构建缓存
 ```powershell
-Remove-Item -Recurse -Force dist, dist-electron -ErrorAction SilentlyContinue
+chcp 65001
+npm run release:build
 ```
 
-### 2. 执行一键构建 (推荐)
-```powershell
-npm run electron:build
-```
-此命令会同时：
-1. 构建前端
-2. 构建 Unpacked 版 -> **自动触发 Hook 修复元数据**
-3. 构建 Portable 版 (基于已修复的文件)
+脚本在 .cache 和 dist-electron 下创建独立的版本、日期、时间戳目录。不删除或清空旧文件；需要清理旧目录时由用户手动处理。
 
-### 3. (可选) 分步构建
-如果一键构建失败，可以分步执行：
+构建流程：生成 UTF-8 版本信息、TypeScript 检查、生产前端构建、Electron 打包、afterPack 修复图标和 Windows 版本信息、生成 ZIP。afterPack 失败时停止构建。
 
-**Step A: 构建 Unpacked 版本**
-```powershell
-npm run electron:build:dir
-```
-(构建完成后 `dist-electron/win-unpacked/VLauncher.exe` 已经是修复好的状态)
+## 输出与核验
 
-**Step B: 构建 Portable 版本**
-```powershell
-npm run electron:build:portable
-```
+- V_comfyui_launcher_<version>_windows_x64_<YYYYMMDD>.exe：单文件便携版。
+- V_comfyui_launcher_portable_<version>_windows_x64_<YYYYMMDD>.zip：解压版。
+- win-unpacked/：与 ZIP 对应的应用目录。
+- release-manifest.json：打包清单、排除内容和签名状态。
 
-### 4. 刷新 Windows 图标缓存
-```powershell
-ie4uinit.exe -show
-```
+核验 EXE 启动、进程名称 VLauncher、图标、AIGCTV 版权、文件和产品版本、主页公告、PS Bridge preload 和解包的 Python 探测脚本。检查 ASAR 和最终 ZIP，禁止打包私有配置、凭据、用户数据、日志、缓存和测试数据。附带 GPL 和第三方许可证。
 
-### 5. 打包 ZIP
-将自动生成的Unpacked目录打包为ZIP：
-```powershell
-Compress-Archive -Path "dist-electron\win-unpacked\*" -DestinationPath "dist-electron\V_comfyui_launcher_portable_1.0.63.zip" -Force
-```
-（将版本号替换为实际版本）
+## GitHub 发布
 
-## 输出文件
+审计通过后提交已确认的项目源码，推送到仓库，创建对应版本 tag；从该 tag 生成完整源码 ZIP。Release 提供 EXE、解压版 ZIP、对应源码 ZIP 和 SHA-256 校验文件。签名配置以项目 package.json 为准。
 
-打包完成后，在 `dist-electron` 目录下会有：
-- `V_comfyui_launcher_1.0.63.exe` - 单文件便携版 (75MB+)
-- `V_comfyui_launcher_portable_1.0.63.zip` - 解压版
-
-## 验证清单
-
-- [ ] Portable EXE：双击运行，检查任务管理器进程名是否为 **VLauncher**
-- [ ] Portable EXE：文件属性 -> 详细信息，应包含 "AIGCTV" 等版权信息
-- [ ] ZIP 包：解压后检查 VLauncher.exe 的版本信息
-
-## 故障排除
-
-如果构建过程中 Hook 报错：
-1. 确保 `npm install` 已正确安装所有依赖（特别是 `rcedit`）
-2. 检查 `public/icon.ico` 是否存在
-3. 手动测试 `fix-version-info.cjs` 脚本看看是否独立运行正常
+所有文本和 JSON 文件明确使用 UTF-8。具体版本的改动与验证见 docs/Release_<version>.md。

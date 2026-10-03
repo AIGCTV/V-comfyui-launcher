@@ -59,6 +59,6 @@ Keep changes focused. Include a short summary, validation commands, and screensh
 
 ## Configuration / 配置说明
 
-Use `.env.example`, `launcher-settings.example.json`, and `rh-config.example.json` as templates. Copy values into ignored local files for development.
+Use `.env.example` and `launcher-settings.example.json` as templates. Copy values into ignored local files for development.
 
-请使用 `.env.example`、`launcher-settings.example.json` 和 `rh-config.example.json` 作为模板，把真实值复制到已忽略的本地文件中用于开发。
+请使用 `.env.example` 和 `launcher-settings.example.json` 作为模板，把真实值复制到已忽略的本地文件中用于开发。

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Play, Square, Cpu, Zap, Folder, FolderInput, FolderOutput, FileJson } from 'lucide-react';
+import buildInfo from '../build-info.json';
 import { AppStatus, RunMode } from '../types';
 import { useTranslation } from '../i18n';
 import {
@@ -31,7 +32,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
     status,
     mode,
     comfyVersion,
-    launcherVersion = { version: '1.0.1', buildDate: '2025-12-26 00:00:00' },
+    launcherVersion = buildInfo,
     onToggleMode,
     onStart,
     onStop
